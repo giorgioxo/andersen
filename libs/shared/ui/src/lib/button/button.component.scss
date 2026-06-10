@@ -1,0 +1,8 @@
+.ui-button {
+  width: 100%;
+
+  &--secondary {
+    --mat-button-filled-container-color: transparent;
+    --mat-button-filled-label-text-color: var(--mat-sys-primary);
+  }
+}

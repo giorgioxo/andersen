@@ -1,0 +1,9 @@
+<button
+  matButton="filled"
+  [type]="type()"
+  [disabled]="disabled()"
+  class="ui-button"
+  [class.ui-button--secondary]="priority() === 'secondary'"
+>
+  <ng-content />
+</button>
