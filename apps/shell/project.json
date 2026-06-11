@@ -8,7 +8,9 @@
   "targets": {
     "build": {
       "executor": "@angular/build:application",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/shell",
         "browser": "apps/shell/src/main.ts",
@@ -20,7 +22,9 @@
             "input": "apps/shell/public"
           }
         ],
-        "styles": ["apps/shell/src/styles.scss"]
+        "styles": [
+          "apps/shell/src/styles.scss"
+        ]
       },
       "configurations": {
         "production": {
@@ -49,6 +53,9 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "options": {
+        "port": 8000
+      },
       "configurations": {
         "production": {
           "buildTarget": "shell:build:production"
