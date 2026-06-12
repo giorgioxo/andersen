@@ -1,26 +1,26 @@
 {
-  "name": "shell",
+  "name": "login",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/shell/src",
+  "sourceRoot": "apps/login/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/shell",
-        "browser": "apps/shell/src/main.ts",
-        "tsConfig": "apps/shell/tsconfig.app.json",
+        "outputPath": "dist/apps/login",
+        "browser": "apps/login/src/main.ts",
+        "tsConfig": "apps/login/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/shell/public"
+            "input": "apps/login/public"
           }
         ],
-        "styles": ["apps/shell/src/styles.scss"]
+        "styles": ["apps/login/src/styles.scss"]
       },
       "configurations": {
         "production": {
@@ -49,12 +49,15 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "options": {
+        "port": 8000
+      },
       "configurations": {
         "production": {
-          "buildTarget": "shell:build:production"
+          "buildTarget": "login:build:production"
         },
         "development": {
-          "buildTarget": "shell:build:development"
+          "buildTarget": "login:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -66,8 +69,8 @@
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "shell:build",
-        "staticFilePath": "dist/apps/shell/browser",
+        "buildTarget": "login:build",
+        "staticFilePath": "dist/apps/login/browser",
         "spa": true
       }
     }

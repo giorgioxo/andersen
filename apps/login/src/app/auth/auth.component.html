@@ -1,0 +1,13 @@
+<section class="auth">
+  <header class="auth__header">
+    <a routerLink="sign-in" routerLinkActive="auth__nav-button--active" class="auth__nav-button"> Login </a>
+
+    <a routerLink="registration" routerLinkActive="auth__nav-button--active" class="auth__nav-button"> Register </a>
+  </header>
+
+  <div class="auth__content">
+    <section class="auth__panel">
+      <router-outlet />
+    </section>
+  </div>
+</section>

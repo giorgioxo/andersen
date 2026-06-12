@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SPINNER_DIAMETER, UiSpinnerSize } from './spinner.model';
 
-
-
 @Component({
   selector: 'ui-spinner',
   imports: [MatProgressSpinnerModule],

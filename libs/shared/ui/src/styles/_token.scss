@@ -1,12 +1,28 @@
 :root {
   --ui-spacing-xs: 4px;
   --ui-spacing-sm: 8px;
+  --ui-spacing-xm: 12px;
   --ui-spacing-md: 16px;
+  --ui-spacing-lg: 24px;
+  --ui-spacing-xl: 80px;
 
   --ui-radius-sm: 4px;
+  --ui-radius-md: 8px;
+
+  --ui-border-width-sm: 1px;
+
+  --ui-font-size-xs: 12px;
+  --ui-font-size-sm: 14px;
+  --ui-font-size-md: 16px;
+  --ui-font-size-lg: 20px;
 
   --ui-line-height-sm: 20px;
 
+  --ui-auth-panel-width: 400px;
+
+  --ui-color-white: #ffffff;
+  --ui-color-border: #dddddd;
+  --ui-color-primary: #0b63ce;
   --ui-color-success: #2e7d32;
   --ui-color-error: #c62828;
 }
