@@ -1,10 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { NotificationService, UiButtonComponent, UiInputComponent, UiInputType } from '@andersen/shared-ui';
-import { AuthService } from '../auth.service';
-import { PASSWORD_VALIDATORS, passwordsMatchValidator, USERNAME_VALIDATORS } from '../auth.validator';
+import { AuthApiService } from '../services/auth-api.service';
+import { EMAIL_VALIDATORS, PASSWORD_VALIDATORS, passwordsMatchValidator } from '../core/auth.validator';
+import { finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AUTH_PASSWORD_ERROR_MESSAGES } from '../core/auth.constants';
+import { getAuthErrorMessage } from '../core/auth.helper';
 
 @Component({
   selector: 'app-reset-password',
@@ -15,16 +19,19 @@ import { PASSWORD_VALIDATORS, passwordsMatchValidator, USERNAME_VALIDATORS } fro
 })
 export class ResetPasswordComponent {
   private readonly formBuilder = inject(NonNullableFormBuilder);
-  private readonly authService = inject(AuthService);
+  private readonly authApiService = inject(AuthApiService);
   private readonly router = inject(Router);
   private readonly notificationService = inject(NotificationService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  protected readonly isResetPasswordPending = signal(false);
 
   protected readonly uiInputType = UiInputType;
+  protected readonly passwordErrorMessages = AUTH_PASSWORD_ERROR_MESSAGES;
 
   protected readonly resetPasswordForm = this.formBuilder.group(
     {
-      username: ['', USERNAME_VALIDATORS],
-      oldPassword: ['', PASSWORD_VALIDATORS],
+      username: ['', EMAIL_VALIDATORS],
       newPassword: ['', PASSWORD_VALIDATORS],
       repeatPassword: ['', Validators.required],
     },
@@ -34,24 +41,33 @@ export class ResetPasswordComponent {
   );
 
   protected submitResetPassword(): void {
+    if (this.isResetPasswordPending()) {
+      return;
+    }
+
     if (this.resetPasswordForm.invalid) {
       this.resetPasswordForm.markAllAsTouched();
       return;
     }
 
-    const { username, oldPassword, newPassword } = this.resetPasswordForm.getRawValue();
-    const isPasswordReset = this.authService.resetPassword({
-      username,
-      oldPassword,
-      newPassword,
-    });
+    const { username, newPassword } = this.resetPasswordForm.getRawValue();
 
-    if (!isPasswordReset) {
-      this.notificationService.error('Invalid username or old password');
-      return;
-    }
+    this.isResetPasswordPending.set(true);
 
-    this.notificationService.success('Password reset successfully');
-    this.router.navigate(['/auth/sign-in']);
+    this.authApiService
+      .resetPassword({ username, newPassword })
+      .pipe(
+        finalize(() => this.isResetPasswordPending.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: ({ email }) => {
+          this.notificationService.success(`${email} password reset successfully`);
+          this.router.navigate(['/auth/sign-in']);
+        },
+        error: (err) => {
+          this.notificationService.error(getAuthErrorMessage(err));
+        },
+      });
   }
 }

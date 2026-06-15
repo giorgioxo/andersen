@@ -18,6 +18,7 @@ export class UiInputComponent {
   public readonly label = input.required<string>();
   public readonly control = input.required<FormControl<string>>();
   public readonly type = input<UiInputType>(UiInputType.Text);
+  public readonly errorMessages = input<Partial<Record<string, string>>>({});
 
   protected readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('inputElement');
   protected readonly isPasswordHidden = signal(true);
@@ -43,4 +44,38 @@ export class UiInputComponent {
   protected readonly passwordToggleLabel = computed(() =>
     this.isPasswordHidden() ? 'Show password' : 'Hide password',
   );
+
+  protected getErrorMessage(): string | null {
+    const control = this.control();
+
+    if (!control.touched || !control.errors) {
+      return null;
+    }
+
+    for (const errorKey of Object.keys(control.errors)) {
+      const customMessage = this.errorMessages()[errorKey];
+
+      if (customMessage) {
+        return customMessage;
+      }
+    }
+
+    if (control.hasError('required')) {
+      return `${this.label()} is required`;
+    }
+
+    if (control.hasError('email')) {
+      return `${this.label()} must be a valid email`;
+    }
+
+    if (control.hasError('minlength')) {
+      return `${this.label()} must be at least 8 characters`;
+    }
+
+    if (control.hasError('pattern')) {
+      return `${this.label()} has invalid format`;
+    }
+
+    return `${this.label()} is invalid`;
+  }
 }

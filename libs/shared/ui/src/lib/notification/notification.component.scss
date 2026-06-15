@@ -1,4 +1,13 @@
 .ui-notification {
   font-weight: 500;
   line-height: var(--ui-line-height-sm);
+  color: var(--ui-color-white);
+
+  &--success {
+    color: var(--ui-color-snackbar-success-content);
+  }
+
+  &--error {
+    color: var(--ui-color-snackbar-error-content);
+  }
 }
