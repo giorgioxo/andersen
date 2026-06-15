@@ -3,11 +3,11 @@
 <form class="sign-in" [formGroup]="signInForm" (ngSubmit)="submitSignIn()">
   <h1 class="sign-in__title">Sign In</h1>
 
-  <ui-input label="Login" [control]="controls.username" />
+  <ui-input label="Login" [type]="uiInputType.Text" [control]="controls.username" />
 
-  <ui-input label="Password" type="password" [control]="controls.password" />
+  <ui-input label="Password" [type]="uiInputType.Password" [control]="controls.password" />
 
   <ui-button type="submit">Sign In</ui-button>
 
-  <button type="button" class="sign-in__link" routerLink="../reset-password">Reset Password</button>
+  <button type="button" class="sign-in__link" routerLink="/auth/reset-password">Reset Password</button>
 </form>
