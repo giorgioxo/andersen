@@ -1,0 +1,39 @@
+.todo {
+  display: block;
+  min-height: 100vh;
+  padding: var(--ui-spacing-xm) var(--ui-spacing-xl);
+  margin-top: var(--ui-spacing-xm);
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: var(--ui-spacing-lg);
+    border-radius: 18px;
+
+    ui-input {
+      width: 100%;
+      margin-right: var(--ui-spacing-md);
+    }
+  }
+
+  &__input {
+    border-radius: 20px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, var(--ui-card-width-md));
+    gap: var(--ui-spacing-lg);
+  }
+
+  &__empty {
+    margin-top: var(--ui-spacing-lg);
+    font-size: var(--ui-font-size-md);
+    color: var(--ui-text-color-secondary);
+  }
+
+  &__add-list {
+    margin-top: var(--ui-spacing-sm);
+    width: var(--ui-button-size-md);
+  }
+}

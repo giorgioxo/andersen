@@ -1,0 +1,26 @@
+<section class="todo">
+  @let controls = todoForm.controls;
+
+  <form class="todo__header" [formGroup]="todoForm" (ngSubmit)="addTodo()">
+    <ui-input label="List Title" [type]="uiInputType.Text" [control]="controls.name" />
+
+    <ui-button class="todo__add-list" type="submit" [disabled]="todoForm.invalid">Add List</ui-button>
+  </form>
+
+  @if (todos().length) {
+    <div class="todo__grid">
+      @for (todo of todos(); track todo.id) {
+        <app-todo-list-card
+          [todo]="todo"
+          (deleteTodo)="deleteTodo($event)"
+          (addTask)="addTask($event)"
+          (deleteTask)="deleteTask($event)"
+          (toggleTaskCompleted)="toggleTaskCompleted($event)"
+          (updateTask)="updateTask($event)"
+        />
+      }
+    </div>
+  } @else {
+    <p class="todo__empty">No lists found. Create your first Todo List above.</p>
+  }
+</section>
