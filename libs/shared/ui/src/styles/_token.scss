@@ -1,10 +1,13 @@
 :root {
-  --ui-spacing-xs: 4px;
+  --ui-spacing-s: 4px;
   --ui-spacing-sm: 8px;
   --ui-spacing-xm: 12px;
+  --ui-spacing-xms: 14px;
   --ui-spacing-md: 16px;
   --ui-spacing-lg: 24px;
+  --ui-spacing-xs: 64px;
   --ui-spacing-xl: 80px;
+  --ui-spacing-xxl: 120px;
 
   --ui-radius-sm: 4px;
   --ui-radius-md: 8px;
@@ -18,6 +21,12 @@
 
   --ui-line-height-sm: 20px;
 
+  --ui-button-size-md: 120px;
+
+  --ui-card-height-sm: 164px;
+  --ui-card-height-md: 180px;
+  --ui-card-width-md: 280px;
+
   --ui-auth-panel-width: 400px;
 
   --ui-color-white: #ffffff;
@@ -27,6 +36,8 @@
   --ui-color-error: #c62828;
   --ui-color-disable: #dbeafe;
   --ui-color-spinner: #f97316;
+
+  --ui-text-color-secondary: #3b3a3a95;
 
   --ui-color-snackbar-success-background: #e8f5e9;
   --ui-color-snackbar-success-content: #2e7d32;

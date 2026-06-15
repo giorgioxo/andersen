@@ -1,0 +1,41 @@
+.todo-list-card {
+  min-height: var(--ui-card-height-md);
+  padding: var(--ui-spacing-md);
+  background: var(--ui-color-white);
+
+  &__header {
+    margin-bottom: var(--ui-spacing-md);
+  }
+
+  &__title {
+    font-size: var(--ui-font-size-lg);
+    color: var(--ui-color-primary);
+  }
+
+  &__content {
+    margin-bottom: var(--ui-spacing-md);
+  }
+
+  &__actions {
+    display: flex;
+    padding: 0;
+    align-self: center;
+  }
+
+  &__tasks {
+    margin-top: var(--ui-spacing-md);
+    padding-top: var(--ui-spacing-md);
+
+    box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
+    border-radius: var(--ui-radius-md);
+    padding: var(--ui-radius-md);
+
+    app-todo-task-item {
+      display: block;
+    }
+
+    app-todo-task-item:not(:last-child) {
+      border-bottom: var(--ui-border-width-sm) solid var(--ui-text-color-secondary);
+    }
+  }
+}

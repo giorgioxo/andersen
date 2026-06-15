@@ -1,0 +1,50 @@
+.todo-task-item {
+  display: flex;
+  align-items: flex-start;
+  padding: var(--ui-spacing-sm) 0;
+  min-height: var(--ui-card-height-sm);
+
+  &__checkbox {
+    margin-right: var(--ui-spacing-sm);
+    padding-top: var(--ui-spacing-xs);
+  }
+
+  &__body {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  &__name {
+    display: block;
+    padding-top: var(--ui-spacing-xms);
+    margin-bottom: var(--ui-spacing-xs);
+    overflow: hidden;
+    color: var(--ui-color-primary);
+    font-size: var(--ui-font-size-md);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &--completed {
+      opacity: 0.5;
+      text-decoration: line-through;
+    }
+  }
+
+  &__edit-form {
+    display: block;
+  }
+
+  &__actions {
+    display: flex;
+  }
+
+  &__actions {
+    display: flex;
+    column-gap: var(--ui-spacing-xm);
+  }
+
+  &__actions-save {
+    margin-top: var(--ui-spacing-xm);
+  }
+}

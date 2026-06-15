@@ -4,3 +4,6 @@ export * from './lib/notification/notification.component';
 export * from './lib/notification/notification.service';
 export * from './lib/input/input.component';
 export * from './lib/input/input.model';
+export * from './lib/dialog/dialog.component';
+export * from './lib/dialog/dialog.model';
+export * from './lib/dialog/dialog.service';
