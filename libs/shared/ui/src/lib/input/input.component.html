@@ -19,15 +19,7 @@
     }
   </mat-form-field>
 
-  @if (control().touched && control().hasError('required')) {
-    <p class="ui-input__error">{{ label() }} is required</p>
-  }
-
-  @if (control().touched && control().hasError('minlength')) {
-    <p class="ui-input__error">{{ label() }} must be at least 8 characters</p>
-  }
-
-  @if (control().touched && control().hasError('pattern')) {
-    <p class="ui-input__error">{{ label() }} can contain only Latin letters and numbers</p>
+  @if (getErrorMessage(); as message) {
+    <p class="ui-input__error">{{ message }}</p>
   }
 </div>

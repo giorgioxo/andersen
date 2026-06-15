@@ -14,6 +14,30 @@ html {
       density: 0,
     )
   );
+
+  @include mat.progress-spinner-overrides(
+    (
+      active-indicator-color: var(--ui-color-spinner),
+    )
+  );
+}
+
+.ui-notification-panel--success {
+  @include mat.snack-bar-overrides(
+    (
+      supporting-text-color: var(--ui-color-snackbar-success-content),
+      container-color: var(--ui-color-snackbar-success-background),
+    )
+  );
+}
+
+.ui-notification-panel--error {
+  @include mat.snack-bar-overrides(
+    (
+      supporting-text-color: var(--ui-color-snackbar-error-content),
+      container-color: var(--ui-color-snackbar-error-background),
+    )
+  );
 }
 
 *,
