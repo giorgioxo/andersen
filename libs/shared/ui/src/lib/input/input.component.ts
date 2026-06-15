@@ -5,13 +5,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
-import { DEFAULT_PASSWORD_VISIBILITY_CONFIG } from './password-visibility.config';
 import {
   UiInputType,
   UiPasswordVisibilityConfig,
   UiPasswordVisibilityIconType,
   UiPasswordVisibilityState,
 } from './input.model';
+import { DEFAULT_PASSWORD_VISIBILITY_CONFIG } from './password-visibility.config';
 
 @Component({
   selector: 'ui-input',
@@ -24,6 +24,7 @@ export class UiInputComponent {
   public readonly label = input.required<string>();
   public readonly control = input.required<FormControl<string>>();
   public readonly type = input<UiInputType>(UiInputType.Text);
+  public readonly errorMessages = input<Partial<Record<string, string>>>({});
 
   public readonly passwordVisibilityConfig = input<UiPasswordVisibilityConfig>(DEFAULT_PASSWORD_VISIBILITY_CONFIG);
 
@@ -54,5 +55,39 @@ export class UiInputComponent {
     event.stopPropagation();
     this.isPasswordHidden.update((isHidden) => !isHidden);
     this.inputElement()?.nativeElement.focus();
+  }
+
+  protected getErrorMessage(): string | null {
+    const control = this.control();
+
+    if (!control.touched || !control.errors) {
+      return null;
+    }
+
+    for (const errorKey of Object.keys(control.errors)) {
+      const customMessage = this.errorMessages()[errorKey];
+
+      if (customMessage) {
+        return customMessage;
+      }
+    }
+
+    if (control.hasError('required')) {
+      return `${this.label()} is required`;
+    }
+
+    if (control.hasError('email')) {
+      return `${this.label()} must be a valid email`;
+    }
+
+    if (control.hasError('minlength')) {
+      return `${this.label()} must be at least 8 characters`;
+    }
+
+    if (control.hasError('pattern')) {
+      return `${this.label()} has invalid format`;
+    }
+
+    return `${this.label()} is invalid`;
   }
 }

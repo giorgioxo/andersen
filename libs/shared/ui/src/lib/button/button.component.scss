@@ -1,5 +1,25 @@
 .ui-button {
+  position: relative;
   width: 100%;
+
+  &__content {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &--hidden {
+      visibility: hidden;
+    }
+  }
+
+  &__spinner {
+    position: absolute;
+    top: 0;
+    right: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   &--secondary {
     --mat-button-filled-container-color: transparent;

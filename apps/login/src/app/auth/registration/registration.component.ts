@@ -1,10 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { NotificationService, UiButtonComponent, UiInputComponent, UiInputType } from '@andersen/shared-ui';
-import { AuthService } from '../auth.service';
-import { PASSWORD_VALIDATORS, passwordsMatchValidator, USERNAME_VALIDATORS } from '../auth.validator';
+import { UiButtonComponent, UiInputComponent, UiInputType } from '@andersen/shared-ui';
+
+import { finalize } from 'rxjs';
+
+import { AUTH_PASSWORD_ERROR_MESSAGES } from '../core/auth.constants';
+import { EMAIL_VALIDATORS, PASSWORD_VALIDATORS, passwordsMatchValidator } from '../core/auth.validator';
+import { AuthApiService } from '../services/auth-api.service';
+import { AUTH_ROUTES } from '../core/auth-routes.constants';
 
 @Component({
   selector: 'app-registration',
@@ -15,15 +21,18 @@ import { PASSWORD_VALIDATORS, passwordsMatchValidator, USERNAME_VALIDATORS } fro
 })
 export class RegistrationComponent {
   private readonly formBuilder = inject(NonNullableFormBuilder);
-  private readonly authService = inject(AuthService);
+  private readonly authApiService = inject(AuthApiService);
   private readonly router = inject(Router);
-  private readonly notificationService = inject(NotificationService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  protected readonly isRegistrationPending = signal(false);
 
   protected readonly uiInputType = UiInputType;
+  protected readonly passwordErrorMessages = AUTH_PASSWORD_ERROR_MESSAGES;
 
   protected readonly registrationForm = this.formBuilder.group(
     {
-      username: ['', USERNAME_VALIDATORS],
+      username: ['', EMAIL_VALIDATORS],
       password: ['', PASSWORD_VALIDATORS],
       repeatPassword: ['', Validators.required],
     },
@@ -39,14 +48,19 @@ export class RegistrationComponent {
     }
 
     const { username, password } = this.registrationForm.getRawValue();
-    const isRegistered = this.authService.register({ username, password });
 
-    if (!isRegistered) {
-      this.notificationService.error('User already exists');
-      return;
-    }
+    this.isRegistrationPending.set(true);
 
-    this.notificationService.success('Registered successfully');
-    this.router.navigate(['/auth/sign-in']);
+    this.authApiService
+      .register({ username, password })
+      .pipe(
+        finalize(() => this.isRegistrationPending.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: () => {
+          this.router.navigate([AUTH_ROUTES.SignIn]);
+        },
+      });
   }
 }
