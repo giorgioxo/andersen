@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { UiButtonPriority, UiButtonType } from './button.model';
 
-
-
 @Component({
   selector: 'ui-button',
   imports: [MatButtonModule],

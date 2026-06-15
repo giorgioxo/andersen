@@ -1,0 +1,20 @@
+.sign-in {
+  display: grid;
+  gap: var(--ui-spacing-xm);
+
+  &__title {
+    margin: 0;
+    font-size: var(--ui-font-size-lg);
+    padding-bottom: var(--ui-spacing-md);
+  }
+
+  &__link {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--ui-color-primary);
+    cursor: pointer;
+    text-align: left;
+    padding-top: var(--ui-spacing-sm);
+  }
+}
