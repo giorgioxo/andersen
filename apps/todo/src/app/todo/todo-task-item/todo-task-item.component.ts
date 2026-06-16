@@ -17,6 +17,7 @@ export class TodoTaskItemComponent {
   private readonly formBuilder = inject(NonNullableFormBuilder);
 
   public readonly task = input.required<ITodoTask>();
+  public readonly isLoading = input(false);
 
   public readonly deleteTask = output<string>();
   public readonly completedChange = output<string>();
@@ -30,20 +31,32 @@ export class TodoTaskItemComponent {
   });
 
   protected onDeleteTask(): void {
+    if (this.isLoading()) {
+      return;
+    }
+
     this.deleteTask.emit(this.task().id);
   }
 
   protected onCompletedChange(): void {
+    if (this.isLoading()) {
+      return;
+    }
+
     this.completedChange.emit(this.task().id);
   }
 
   protected startEdit(): void {
+    if (this.isLoading()) {
+      return;
+    }
+
     this.editForm.controls.name.setValue(this.task().name);
     this.isEditing.set(true);
   }
 
   protected saveEdit(): void {
-    if (this.editForm.invalid) {
+    if (this.editForm.invalid || this.isLoading()) {
       this.editForm.markAllAsTouched();
       return;
     }
