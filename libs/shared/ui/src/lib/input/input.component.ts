@@ -41,9 +41,7 @@ export class UiInputComponent {
     this.inputElement()?.nativeElement.focus();
   }
 
-  protected readonly passwordToggleLabel = computed(() =>
-    this.isPasswordHidden() ? 'Show password' : 'Hide password',
-  );
+  protected readonly passwordToggleLabel = computed(() => (this.isPasswordHidden() ? 'Show password' : 'Hide password'));
 
   protected getErrorMessage(): string | null {
     const control = this.control();

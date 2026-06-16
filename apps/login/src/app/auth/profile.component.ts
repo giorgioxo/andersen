@@ -19,12 +19,7 @@ import { getAuthErrorMessage } from './core/auth.helper';
     <form [formGroup]="signOutForm" (ngSubmit)="submitSignOut()">
       <h1>Profile</h1>
 
-      <ui-input
-        label="Password"
-        [type]="uiInputType.Password"
-        [control]="controls.password"
-        [errorMessages]="passwordErrorMessages"
-      />
+      <ui-input label="Password" [type]="uiInputType.Password" [control]="controls.password" [errorMessages]="passwordErrorMessages" />
 
       <ui-button type="submit" [disabled]="signOutForm.invalid" [loading]="isSignOutPending()">Sign Out</ui-button>
     </form>

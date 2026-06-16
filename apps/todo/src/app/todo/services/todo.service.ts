@@ -1,117 +1,172 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { NotificationService } from '@andersen/shared-ui';
+import { catchError, EMPTY, Observable, tap } from 'rxjs';
 
-import { ITodo, ITodoTask } from '../core/todo.models';
+import { ITodo } from '../core/todo.models';
+import { TodoApiService } from './todo-api.service';
+import { TodoSessionService } from './todo-session.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
+  private readonly todoApiService = inject(TodoApiService);
+  private readonly todoSessionService = inject(TodoSessionService);
+  private readonly notificationService = inject(NotificationService);
+
   private readonly todoItems = signal<ITodo[]>([]);
 
   public readonly todos = this.todoItems.asReadonly();
 
-  public addTodo(name: string): void {
-    const trimmedName = name.trim();
+  public loadTodos(): Observable<ITodo[]> {
+    const token = this.getToken();
 
-    if (!trimmedName) {
-      return;
+    if (!token) {
+      return EMPTY;
     }
 
-    this.todoItems.update((todos) => [
-      ...todos,
-      {
-        id: crypto.randomUUID(),
-        name: trimmedName,
-        tasks: [],
-      },
-    ]);
+    return this.todoApiService.getTodos(token).pipe(
+      tap((todos) => {
+        this.todoItems.set(todos);
+      }),
+      catchError(() => this.handleError('Failed to load todos')),
+    );
   }
 
-  public deleteTodo(todoId: string): void {
-    this.todoItems.update((todos) => todos.filter(({ id }) => id !== todoId));
-  }
+  public addTodo(name: string): Observable<ITodo> {
+    const token = this.getToken();
 
-  public addTask(todoId: string, name: string): void {
-    const trimmedName = name.trim();
-
-    if (!trimmedName) {
-      return;
+    if (!token) {
+      return EMPTY;
     }
 
-    const task: ITodoTask = {
-      id: crypto.randomUUID(),
-      name: trimmedName,
-      completed: false,
-    };
-
-    this.todoItems.update((todos) =>
-      todos.map((todo) =>
-        todo.id === todoId
-          ? {
-            ...todo,
-            tasks: [...todo.tasks, task],
-          }
-          : todo,
-      ),
+    return this.todoApiService.createTodo(token, { name }).pipe(
+      tap((todo) => {
+        this.todoItems.update((todos) => [...todos, todo]);
+        this.notificationService.success('Todo added successfully');
+      }),
+      catchError(() => this.handleError('Failed to add todo')),
     );
   }
 
-  public deleteTask(todoId: string, taskId: string): void {
-    this.todoItems.update((todos) =>
-      todos.map((todo) =>
-        todo.id === todoId
-          ? {
-            ...todo,
-            tasks: todo.tasks.filter(({ id }) => id !== taskId),
-          }
-          : todo,
-      ),
-    );
-  }
+  public deleteTodo(todoId: string): Observable<{ deleted: boolean }> {
+    const token = this.getToken();
 
-  public toggleTaskCompleted(todoId: string, taskId: string): void {
-    this.todoItems.update((todos) =>
-      todos.map((todo) =>
-        todo.id === todoId
-          ? {
-            ...todo,
-            tasks: todo.tasks.map((task) =>
-              task.id === taskId
-                ? {
-                  ...task,
-                  completed: !task.completed,
-                }
-                : task,
-            ),
-          }
-          : todo,
-      ),
-    );
-  }
-
-  public updateTaskName(todoId: string, taskId: string, name: string): void {
-    const trimmedName = name.trim();
-
-    if (!trimmedName) {
-      return;
+    if (!token) {
+      return EMPTY;
     }
 
-    this.todoItems.update((todos) =>
-      todos.map((todo) =>
-        todo.id === todoId
-          ? {
-            ...todo,
-            tasks: todo.tasks.map((task) =>
-              task.id === taskId
-                ? {
-                  ...task,
-                  name: trimmedName,
-                }
-                : task,
-            ),
-          }
-          : todo,
-      ),
+    return this.todoApiService.deleteTodo(token, todoId).pipe(
+      tap(() => {
+        this.todoItems.update((todos) => todos.filter(({ id }) => id !== todoId));
+        this.notificationService.success('Todo deleted successfully');
+      }),
+      catchError(() => this.handleError('Failed to delete todo')),
     );
+  }
+
+  public addTask(todoId: string, name: string): Observable<ITodo> {
+    const token = this.getToken();
+
+    if (!token) {
+      return EMPTY;
+    }
+
+    return this.todoApiService.createTask(token, todoId, { name }).pipe(
+      tap((updatedTodo) => {
+        this.updateTodoItem(updatedTodo);
+      }),
+      catchError(() => this.handleError('Failed to add task')),
+    );
+  }
+
+  public deleteTask(todoId: string, taskId: string): Observable<ITodo> {
+    const token = this.getToken();
+
+    if (!token) {
+      return EMPTY;
+    }
+
+    return this.todoApiService.deleteTask(token, todoId, taskId).pipe(
+      tap((updatedTodo) => {
+        this.updateTodoItem(updatedTodo);
+        this.notificationService.success('Task deleted successfully');
+      }),
+      catchError(() => this.handleError('Failed to delete task')),
+    );
+  }
+
+  public toggleTaskCompleted(todoId: string, taskId: string): Observable<ITodo> {
+    const task = this.findTask(todoId, taskId);
+
+    if (!task) {
+      this.notificationService.error('Task was not found');
+      return EMPTY;
+    }
+
+    return this.updateTask(todoId, taskId, {
+      name: task.name,
+      completed: !task.completed,
+    });
+  }
+
+  public updateTaskName(todoId: string, taskId: string, name: string): Observable<ITodo> {
+    const task = this.findTask(todoId, taskId);
+
+    if (!task) {
+      this.notificationService.error('Task was not found');
+      return EMPTY;
+    }
+
+    return this.updateTask(todoId, taskId, {
+      name,
+      completed: task.completed,
+    }).pipe(
+      tap(() => {
+        this.notificationService.success('Task updated successfully');
+      }),
+    );
+  }
+
+  private updateTask(todoId: string, taskId: string, payload: { name: string; completed: boolean }): Observable<ITodo> {
+    const token = this.getToken();
+
+    if (!token) {
+      return EMPTY;
+    }
+
+    return this.todoApiService.updateTask(token, todoId, taskId, payload).pipe(
+      tap((updatedTodo) => {
+        this.updateTodoItem(updatedTodo);
+      }),
+      catchError(() => this.handleError('Failed to update task')),
+    );
+  }
+
+  private updateTodoItem(updatedTodo: ITodo): void {
+    this.todoItems.update((todos) => todos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo)));
+  }
+
+  private findTask(todoId: string, taskId: string): ITodo['tasks'][number] | undefined {
+    const todo = this.todoItems().find(({ id }) => id === todoId);
+
+    return todo?.tasks.find(({ id }) => id === taskId);
+  }
+
+  private getToken(): string | null {
+    const token = this.todoSessionService.getToken();
+
+    if (!token) {
+      this.notificationService.error('Authentication token is missing');
+      return null;
+    }
+
+    return token;
+  }
+
+  private handleError(message: string): Observable<never> {
+    this.notificationService.error(message);
+
+    return EMPTY;
   }
 }
