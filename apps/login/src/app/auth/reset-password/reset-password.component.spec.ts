@@ -4,15 +4,15 @@ import { NotificationService } from '@andersen/shared-ui';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { RegistrationComponent } from '../registration/registration.component';
+import { ResetPasswordComponent } from './reset-password.component';
 import { AuthApiService } from '../services/auth-api.service';
 
-describe('RegistrationComponent', () => {
-  let fixture: ComponentFixture<RegistrationComponent>;
-  let component: RegistrationComponent;
+describe('ResetPasswordComponent', () => {
+  let fixture: ComponentFixture<ResetPasswordComponent>;
+  let component: ResetPasswordComponent;
 
   const authApiServiceMock = {
-    register: vi.fn(),
+    resetPassword: vi.fn(),
   };
 
   const routerMock = {
@@ -23,7 +23,7 @@ describe('RegistrationComponent', () => {
     vi.clearAllMocks();
 
     await TestBed.configureTestingModule({
-      imports: [RegistrationComponent],
+      imports: [ResetPasswordComponent],
       providers: [
         {
           provide: AuthApiService,
@@ -43,87 +43,87 @@ describe('RegistrationComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RegistrationComponent);
+    fixture = TestBed.createComponent(ResetPasswordComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should not call register api when form is invalid', () => {
-    component['submitRegistration']();
+  it('should not call reset password api when form is invalid', () => {
+    component['submitResetPassword']();
 
-    expect(authApiServiceMock.register).not.toHaveBeenCalled();
+    expect(authApiServiceMock.resetPassword).not.toHaveBeenCalled();
   });
 
-  it('should call register api with form value', () => {
-    authApiServiceMock.register.mockReturnValue(
+  it('should call reset password api with form value', () => {
+    authApiServiceMock.resetPassword.mockReturnValue(
       of({
         email: 'user@email.com',
       }),
     );
 
-    component['registrationForm'].setValue({
+    component['resetPasswordForm'].setValue({
       username: 'user@email.com',
-      password: '@@1234AB',
+      newPassword: '@@1234AB',
       repeatPassword: '@@1234AB',
     });
 
-    component['submitRegistration']();
+    component['submitResetPassword']();
 
-    expect(authApiServiceMock.register).toHaveBeenCalledWith({
+    expect(authApiServiceMock.resetPassword).toHaveBeenCalledWith({
       username: 'user@email.com',
-      password: '@@1234AB',
+      newPassword: '@@1234AB',
     });
   });
 
-  it('should navigate to sign in after successful registration', () => {
-    authApiServiceMock.register.mockReturnValue(
+  it('should navigate to sign in after successful password reset', () => {
+    authApiServiceMock.resetPassword.mockReturnValue(
       of({
         email: 'user@email.com',
       }),
     );
 
-    component['registrationForm'].setValue({
+    component['resetPasswordForm'].setValue({
       username: 'user@email.com',
-      password: '@@1234AB',
+      newPassword: '@@1234AB',
       repeatPassword: '@@1234AB',
     });
 
-    component['submitRegistration']();
+    component['submitResetPassword']();
 
     expect(routerMock.navigate).toHaveBeenCalledWith(['/auth/sign-in']);
   });
 
-  it('should not navigate when registration fails', () => {
-    authApiServiceMock.register.mockReturnValue(
+  it('should not navigate when reset password fails', () => {
+    authApiServiceMock.resetPassword.mockReturnValue(
       throwError(() => ({
         error: {
-          error: 'Registration failed',
+          error: 'Reset password failed',
         },
       })),
     );
 
-    component['registrationForm'].setValue({
+    component['resetPasswordForm'].setValue({
       username: 'user@email.com',
-      password: '@@1234AB',
+      newPassword: '@@1234AB',
       repeatPassword: '@@1234AB',
     });
 
-    component['submitRegistration']();
+    component['submitResetPassword']();
 
     expect(routerMock.navigate).not.toHaveBeenCalled();
   });
 
-  it('should not submit while registration is pending', () => {
-    component['isRegistrationPending'].set(true);
+  it('should not submit while reset password is pending', () => {
+    component['isResetPasswordPending'].set(true);
 
-    component['registrationForm'].setValue({
+    component['resetPasswordForm'].setValue({
       username: 'user@email.com',
-      password: '@@1234AB',
+      newPassword: '@@1234AB',
       repeatPassword: '@@1234AB',
     });
 
-    component['submitRegistration']();
+    component['submitResetPassword']();
 
-    expect(authApiServiceMock.register).not.toHaveBeenCalled();
+    expect(authApiServiceMock.resetPassword).not.toHaveBeenCalled();
   });
 });
