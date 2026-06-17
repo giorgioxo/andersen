@@ -42,6 +42,9 @@ export class RegistrationComponent {
   );
 
   protected submitRegistration(): void {
+    if (this.isRegistrationPending()) {
+      return;
+    }
     if (this.registrationForm.invalid) {
       this.registrationForm.markAllAsTouched();
       return;
