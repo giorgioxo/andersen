@@ -7,11 +7,17 @@
   }
 
   &__content {
-    max-height: 360px;
+    position: relative;
+    max-height: var(--ui-auth-panel-width);
     overflow: auto;
     border: var(--ui-border-width-sm) solid var(--ui-color-border);
     border-radius: var(--ui-radius-md) var(--ui-radius-md) 0 0;
     background-color: var(--ui-color-white);
+
+    &--loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
   }
 
   table {

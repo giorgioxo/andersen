@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
+  HISTORY_AUTH_TOKEN_REQUEST_EVENT,
   MFE_AUTH_LOGIN_SUCCESS_EVENT,
   MFE_AUTH_LOGOUT_EVENT,
   SHELL_AUTH_TOKEN_EVENT,
@@ -21,6 +22,7 @@ export class MfeEventBridgeService {
     window.addEventListener(MFE_AUTH_LOGIN_SUCCESS_EVENT, this.handleLoginSuccess);
     window.addEventListener(MFE_AUTH_LOGOUT_EVENT, this.handleLogout);
     window.addEventListener(TODO_AUTH_TOKEN_REQUEST_EVENT, this.handleAuthTokenRequest);
+    window.addEventListener(HISTORY_AUTH_TOKEN_REQUEST_EVENT, this.handleAuthTokenRequest);
   }
 
   private readonly handleLoginSuccess = (event: Event): void => {

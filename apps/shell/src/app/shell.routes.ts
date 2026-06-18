@@ -20,6 +20,11 @@ export const shellRoutes: Route[] = [
     loadChildren: () => import('@andersen/todo-routes').then((m) => m.todoRoutes),
   },
   {
+    path: 'history',
+    canActivate: [authGuard],
+    loadChildren: () => import('@andersen/history-routes').then((m) => m.historyRoutes),
+  },
+  {
     path: '**',
     redirectTo: 'auth',
   },
