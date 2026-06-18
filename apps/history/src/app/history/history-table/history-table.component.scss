@@ -1,0 +1,26 @@
+.history-table {
+  display: flex;
+  flex-direction: column;
+
+  &__filter {
+    max-width: var(--ui-auth-panel-width);
+  }
+
+  &__content {
+    max-height: 360px;
+    overflow: auto;
+    border: var(--ui-border-width-sm) solid var(--ui-color-border);
+    border-radius: var(--ui-radius-md) var(--ui-radius-md) 0 0;
+    background-color: var(--ui-color-white);
+  }
+
+  table {
+    width: 100%;
+  }
+
+  mat-paginator {
+    border: var(--ui-border-width-sm) solid var(--ui-color-border);
+    border-top: 0;
+    border-radius: 0 0 var(--ui-radius-md) var(--ui-radius-md);
+  }
+}

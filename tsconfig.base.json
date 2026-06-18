@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "paths": {
       "@andersen/login-routes": ["./apps/login/src/app/auth/auth.routes.ts"],
-"@andersen/todo-routes": ["./apps/todo/src/app/todo/todo.routes.ts"],
-"@andersen/shared-ui": ["./libs/shared/ui/src/index.ts"]
+      "@andersen/todo-routes": ["./apps/todo/src/app/todo/todo.routes.ts"],
+      "@andersen/shared-ui": ["./libs/shared/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

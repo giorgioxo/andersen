@@ -11,14 +11,14 @@ export const shellRoutes: Route[] = [
     children: [],
   },
   {
-  path: 'auth',
-  loadChildren: () => import('@andersen/login-routes').then((m) => m.authRoutes),
-},
-{
-  path: 'dashboard',
-  canActivate: [authGuard],
-  loadChildren: () => import('@andersen/todo-routes').then((m) => m.todoRoutes),
-},
+    path: 'auth',
+    loadChildren: () => import('@andersen/login-routes').then((m) => m.authRoutes),
+  },
+  {
+    path: 'dashboard',
+    canActivate: [authGuard],
+    loadChildren: () => import('@andersen/todo-routes').then((m) => m.todoRoutes),
+  },
   {
     path: '**',
     redirectTo: 'auth',

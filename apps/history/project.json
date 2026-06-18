@@ -1,26 +1,26 @@
 {
-  "name": "shell",
+  "name": "history",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/shell/src",
+  "sourceRoot": "apps/history/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/shell",
-        "browser": "apps/shell/src/main.ts",
-        "tsConfig": "apps/shell/tsconfig.app.json",
+        "outputPath": "dist/apps/history",
+        "browser": "apps/history/src/main.ts",
+        "tsConfig": "apps/history/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/shell/public"
+            "input": "apps/history/public"
           }
         ],
-        "styles": ["apps/shell/src/styles.scss"]
+        "styles": ["apps/history/src/styles.scss"]
       },
       "configurations": {
         "production": {
@@ -50,14 +50,14 @@
       "continuous": true,
       "executor": "@angular/build:dev-server",
       "options": {
-        "port": 8002
+        "port": 8003
       },
       "configurations": {
         "production": {
-          "buildTarget": "shell:build:production"
+          "buildTarget": "history:build:production"
         },
         "development": {
-          "buildTarget": "shell:build:development"
+          "buildTarget": "history:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -68,16 +68,17 @@
     "test": {
       "executor": "@angular/build:unit-test",
       "options": {
-        "tsConfig": "apps/shell/tsconfig.spec.json",
-        "runner": "vitest"
+        "tsConfig": "apps/history/tsconfig.spec.json",
+        "runner": "vitest",
+        "watch": false
       }
     },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "shell:build",
-        "staticFilePath": "dist/apps/shell/browser",
+        "buildTarget": "history:build",
+        "staticFilePath": "dist/apps/history/browser",
         "spa": true
       }
     }

@@ -1,0 +1,12 @@
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-spacing-lg);
+  padding: var(--ui-spacing-lg);
+
+  &__title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+}

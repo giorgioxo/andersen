@@ -5,12 +5,12 @@
   margin-top: var(--ui-spacing-xm);
 
   &__toolbar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: var(--ui-spacing-lg);
-  border-bottom: var(--ui-border-width-sm) solid var(--ui-color-border);
-}
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: var(--ui-spacing-lg);
+    border-bottom: var(--ui-border-width-sm) solid var(--ui-color-border);
+  }
 
   &__header {
     display: flex;
