@@ -3,5 +3,11 @@
     <h1 class="history__title">History</h1>
   </header>
 
-  <app-history-table [events]="historyEvents" />
+  <app-history-table
+    [events]="historyEvents()"
+    [totalItems]="historyTotal()"
+    [query]="historyQuery()"
+    [isLoading]="isLoading()"
+    (queryChange)="onQueryChange($event)"
+  />
 </section>

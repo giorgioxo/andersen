@@ -6,9 +6,23 @@ export enum HistoryEventType {
   UpdateTask = 'UPDATE_TASK',
 }
 
+export type HistorySortDirection = 'asc' | 'desc';
+
 export interface IHistoryEvent {
   id: string;
   type: HistoryEventType;
-  createdAt: Date;
+  createdAt: string;
   additionalInfo: string;
+}
+
+export interface IHistoryQuery {
+  limit: number;
+  page: number;
+  event: HistoryEventType[];
+  sort: HistorySortDirection;
+}
+
+export interface IHistoryResponse {
+  items: IHistoryEvent[];
+  total: number;
 }
