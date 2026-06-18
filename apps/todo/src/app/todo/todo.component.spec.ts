@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TodoComponent } from './todo.component';
 import { TodoService } from './services/todo.service';
-import { TodoSessionService } from './services/todo-session.service';
+import { TodoEventBridgeService } from './services/todo-event-bridge.service';
 
 describe('TodoComponent', () => {
   let fixture: ComponentFixture<TodoComponent>;
@@ -14,7 +14,6 @@ describe('TodoComponent', () => {
 
   const todoServiceMock = {
     todos: () => [],
-    loadTodos: vi.fn(),
     addTodo: vi.fn(),
     deleteTodo: vi.fn(),
     addTask: vi.fn(),
@@ -23,8 +22,9 @@ describe('TodoComponent', () => {
     updateTaskName: vi.fn(),
   };
 
-  const todoSessionServiceMock = {
-    setToken: vi.fn(),
+  const todoEventBridgeServiceMock = {
+    init: vi.fn(),
+    dispatchLogout: vi.fn(),
   };
 
   const dialogServiceMock = {
@@ -38,7 +38,6 @@ describe('TodoComponent', () => {
   beforeEach(async () => {
     vi.clearAllMocks();
 
-    todoServiceMock.loadTodos.mockReturnValue(of([]));
     todoServiceMock.addTodo.mockReturnValue(of({ id: 'todo-123', name: 'Work', tasks: [] }));
     todoServiceMock.deleteTodo.mockReturnValue(of({ deleted: true }));
     todoServiceMock.addTask.mockReturnValue(of({ id: 'todo-123', name: 'Work', tasks: [] }));
@@ -55,8 +54,8 @@ describe('TodoComponent', () => {
           useValue: todoServiceMock,
         },
         {
-          provide: TodoSessionService,
-          useValue: todoSessionServiceMock,
+          provide: TodoEventBridgeService,
+          useValue: todoEventBridgeServiceMock,
         },
         {
           provide: UiDialogService,
@@ -70,8 +69,8 @@ describe('TodoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should load todos on init', () => {
-    expect(todoServiceMock.loadTodos).toHaveBeenCalled();
+  it('should initialize todo event bridge on init', () => {
+    expect(todoEventBridgeServiceMock.init).toHaveBeenCalled();
   });
 
   it('should not add todo when form is invalid', () => {
@@ -122,5 +121,11 @@ describe('TodoComponent', () => {
     });
 
     expect(todoServiceMock.addTask).not.toHaveBeenCalled();
+  });
+
+  it('should dispatch logout event', () => {
+    component['logout']();
+
+    expect(todoEventBridgeServiceMock.dispatchLogout).toHaveBeenCalled();
   });
 });

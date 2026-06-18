@@ -7,7 +7,7 @@ import { filter, finalize, switchMap } from 'rxjs';
 import { DELETE_TASK_DIALOG_DATA, DELETE_TODO_DIALOG_DATA } from './core/todo.constants';
 import { TodoListCardComponent } from './todo-list-card/todo-list-card.component';
 import { TodoService } from './services/todo.service';
-import { TodoSessionService } from './services/todo-session.service';
+import { TodoEventBridgeService } from './services/todo-event-bridge.service';
 
 @Component({
   selector: 'app-todo',
@@ -21,8 +21,7 @@ export class TodoComponent implements OnInit {
   private readonly todoService = inject(TodoService);
   private readonly dialogService = inject(UiDialogService);
   private readonly destroyRef = inject(DestroyRef);
-
-  private readonly todoSessionService = inject(TodoSessionService); // hardcoded, remove in next US
+  private readonly todoEventBridgeService = inject(TodoEventBridgeService);
 
   protected readonly isAddTodoPending = signal(false);
   protected readonly loadingTodoId = signal<string | null>(null);
@@ -35,8 +34,7 @@ export class TodoComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.todoSessionService.setToken('PASTE_Real_TOKEN_HERE'); // just remove then till shell 
-    this.todoService.loadTodos().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.todoEventBridgeService.init();
   }
 
   protected addTodo(todoFormDirective: FormGroupDirective): void {
@@ -76,11 +74,7 @@ export class TodoComponent implements OnInit {
         switchMap(() => {
           this.loadingTodoId.set(todoId);
 
-          return this.todoService.deleteTodo(todoId).pipe(
-            finalize(() => {
-              this.loadingTodoId.set(null);
-            }),
-          );
+          return this.todoService.deleteTodo(todoId).pipe(finalize(() => this.loadingTodoId.set(null)));
         }),
         takeUntilDestroyed(this.destroyRef),
       )
@@ -100,9 +94,7 @@ export class TodoComponent implements OnInit {
     this.todoService
       .addTask(event.todoId, event.name.trim())
       .pipe(
-        finalize(() => {
-          this.loadingTodoId.set(null);
-        }),
+        finalize(() => this.loadingTodoId.set(null)),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
@@ -120,11 +112,7 @@ export class TodoComponent implements OnInit {
         switchMap(() => {
           this.loadingTodoId.set(event.todoId);
 
-          return this.todoService.deleteTask(event.todoId, event.taskId).pipe(
-            finalize(() => {
-              this.loadingTodoId.set(null);
-            }),
-          );
+          return this.todoService.deleteTask(event.todoId, event.taskId).pipe(finalize(() => this.loadingTodoId.set(null)));
         }),
         takeUntilDestroyed(this.destroyRef),
       )
@@ -141,9 +129,7 @@ export class TodoComponent implements OnInit {
     this.todoService
       .toggleTaskCompleted(event.todoId, event.taskId)
       .pipe(
-        finalize(() => {
-          this.loadingTodoId.set(null);
-        }),
+        finalize(() => this.loadingTodoId.set(null)),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
@@ -159,11 +145,13 @@ export class TodoComponent implements OnInit {
     this.todoService
       .updateTaskName(event.todoId, event.taskId, event.name.trim())
       .pipe(
-        finalize(() => {
-          this.loadingTodoId.set(null);
-        }),
+        finalize(() => this.loadingTodoId.set(null)),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
+  }
+
+  protected logout(): void {
+    this.todoEventBridgeService.dispatchLogout();
   }
 }

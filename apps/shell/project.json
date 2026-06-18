@@ -49,6 +49,9 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "options": {
+        "port": 8002
+      },
       "configurations": {
         "production": {
           "buildTarget": "shell:build:production"
@@ -62,6 +65,13 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     },
+    "test": {
+  "executor": "@angular/build:unit-test",
+  "options": {
+    "tsConfig": "apps/shell/tsconfig.spec.json",
+    "runner": "vitest"
+  }
+},
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",

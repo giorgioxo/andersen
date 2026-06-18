@@ -1,14 +1,16 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 import { NotificationService, UiButtonComponent, UiInputComponent, UiInputType } from '@andersen/shared-ui';
-import { AuthApiService } from '../services/auth-api.service';
-import { EMAIL_VALIDATORS, SIGN_IN_PASSWORD_VALIDATORS } from '../core/auth.validator';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AuthSessionService } from '../services/auth-session.service';
+
+import { AUTH_LOGIN_SUCCESS_EVENT } from '../core/auth-events.constants';
+import { IAuthLoginSuccessEventDetail } from '../core/auth-events.model';
 import { getAuthErrorMessage } from '../core/auth.helper';
+import { EMAIL_VALIDATORS, SIGN_IN_PASSWORD_VALIDATORS } from '../core/auth.validator';
+import { AuthApiService } from '../services/auth-api.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -22,8 +24,6 @@ export class SignInComponent {
   private readonly authApiService = inject(AuthApiService);
   private readonly notificationService = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly authSessionService = inject(AuthSessionService);
-  private readonly router = inject(Router);
 
   protected readonly isSignInPending = signal(false);
 
@@ -56,9 +56,16 @@ export class SignInComponent {
       )
       .subscribe({
         next: ({ email, token }) => {
-          this.authSessionService.setSession({ email, token });
           this.notificationService.success(`${email} signed in successfully`);
-          this.router.navigate(['/auth/profile']);
+
+          window.dispatchEvent(
+            new CustomEvent<IAuthLoginSuccessEventDetail>(AUTH_LOGIN_SUCCESS_EVENT, {
+              detail: {
+                email,
+                token,
+              },
+            }),
+          );
         },
         error: (err) => {
           this.notificationService.error(getAuthErrorMessage(err));

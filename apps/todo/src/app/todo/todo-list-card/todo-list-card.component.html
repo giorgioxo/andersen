@@ -7,7 +7,7 @@
 
   <mat-card-content class="todo-list-card__content">
     <form class="todo-list-card__task-form" [formGroup]="taskForm" #taskFormDirective="ngForm" (ngSubmit)="onAddTask(taskFormDirective)">
-      <ui-input label="Task Description" [type]="uiInputType.Text" [control]="controls.name"/>
+      <ui-input label="Task Description" [type]="uiInputType.Text" [control]="controls.name" />
 
       <ui-button type="submit" appearance="tonal" [disabled]="taskForm.invalid"> Add Task </ui-button>
     </form>

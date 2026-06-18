@@ -10,6 +10,8 @@ describe('AuthApiService', () => {
   let service: AuthApiService;
   let httpTestingController: HttpTestingController;
 
+  const authApiUrl = environment.authApiBaseUrl;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [AuthApiService, provideHttpClient(), provideHttpClientTesting()],
@@ -26,25 +28,24 @@ describe('AuthApiService', () => {
   const expectRegisterRequest = () => {
     service.register({ username: ' Test@Email.COM ', password: '@@1234AB' }).subscribe();
 
-    return httpTestingController.expectOne(`${environment.authApiBaseUrl}/sign-up`);
+    return httpTestingController.expectOne(`${authApiUrl}/sign-up`);
   };
 
   const expectSignInRequest = () => {
     service.signIn({ username: ' User@Email.COM ', password: '@@1234AB' }).subscribe();
 
-    return httpTestingController.expectOne(`${environment.authApiBaseUrl}/sign-in`);
+    return httpTestingController.expectOne(`${authApiUrl}/sign-in`);
   };
 
   const expectResetPasswordRequest = () => {
-    service.resetPassword({ username: ' Reset@Email.COM ', newPassword: '@@9999AB' }).subscribe();
+    service
+      .resetPassword({
+        username: ' Reset@Email.COM ',
+        newPassword: '@@9999AB',
+      })
+      .subscribe();
 
-    return httpTestingController.expectOne(`${environment.authApiBaseUrl}/sign-in/reset`);
-  };
-
-  const expectLogoutRequest = () => {
-    service.logout({ email: 'user@email.com', password: '@@1234AB', token: 'token-123' }).subscribe();
-
-    return httpTestingController.expectOne(`${environment.logoutApiBaseUrl}/sign-in/out`);
+    return httpTestingController.expectOne(`${authApiUrl}/sign-in/reset`);
   };
 
   it('should send register request with post method', () => {
@@ -94,7 +95,7 @@ describe('AuthApiService', () => {
       });
     });
 
-    const request = httpTestingController.expectOne(`${environment.authApiBaseUrl}/sign-in`);
+    const request = httpTestingController.expectOne(`${authApiUrl}/sign-in`);
 
     request.flush(
       { email: 'user@email.com' },
@@ -125,32 +126,5 @@ describe('AuthApiService', () => {
     });
 
     request.flush({ email: 'reset@email.com' });
-  });
-
-  it('should send logout request with delete method', () => {
-    const request = expectLogoutRequest();
-
-    expect(request.request.method).toBe('DELETE');
-
-    request.flush(null);
-  });
-
-  it('should send logout request with auth token header', () => {
-    const request = expectLogoutRequest();
-
-    expect(request.request.headers.get('T-Auth')).toBe('token-123');
-
-    request.flush(null);
-  });
-
-  it('should send logout request with body', () => {
-    const request = expectLogoutRequest();
-
-    expect(request.request.body).toEqual({
-      email: 'user@email.com',
-      password: '@@1234AB',
-    });
-
-    request.flush(null);
   });
 });

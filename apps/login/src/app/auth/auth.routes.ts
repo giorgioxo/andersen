@@ -20,10 +20,6 @@ export const authRoutes: Route[] = [
         loadComponent: () => import('./reset-password/reset-password.component').then((m) => m.ResetPasswordComponent),
       },
       {
-        path: 'profile',
-        loadComponent: () => import('./profile.component').then((m) => m.ProfileComponent),
-      },
-      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'sign-in',

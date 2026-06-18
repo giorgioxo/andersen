@@ -1,0 +1,57 @@
+import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+
+import {
+  MFE_AUTH_LOGIN_SUCCESS_EVENT,
+  MFE_AUTH_LOGOUT_EVENT,
+  SHELL_AUTH_TOKEN_EVENT,
+  TODO_AUTH_TOKEN_REQUEST_EVENT,
+} from '../constants/mfe-events.constants';
+import { IAuthLoginSuccessEventDetail } from '../models/mfe-events.model';
+import { ShellSessionService } from './shell-session.service';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class MfeEventBridgeService {
+  private readonly router = inject(Router);
+  private readonly shellSessionService = inject(ShellSessionService);
+
+  public init(): void {
+    window.addEventListener(MFE_AUTH_LOGIN_SUCCESS_EVENT, this.handleLoginSuccess);
+    window.addEventListener(MFE_AUTH_LOGOUT_EVENT, this.handleLogout);
+    window.addEventListener(TODO_AUTH_TOKEN_REQUEST_EVENT, this.handleAuthTokenRequest);
+  }
+
+  private readonly handleLoginSuccess = (event: Event): void => {
+    const { token } = (event as CustomEvent<IAuthLoginSuccessEventDetail>).detail;
+
+    this.shellSessionService.setToken(token);
+    this.router.navigate(['/dashboard']);
+  };
+
+  private readonly handleLogout = (): void => {
+    this.shellSessionService.clearToken();
+    this.router.navigate(['/auth/sign-in']);
+  };
+
+  private readonly handleAuthTokenRequest = (): void => {
+    const token = this.shellSessionService.getToken();
+
+    if (!token) {
+      return;
+    }
+
+    this.dispatchAuthToken(token);
+  };
+
+  private dispatchAuthToken(token: string): void {
+    window.dispatchEvent(
+      new CustomEvent(SHELL_AUTH_TOKEN_EVENT, {
+        detail: {
+          token,
+        },
+      }),
+    );
+  }
+}
