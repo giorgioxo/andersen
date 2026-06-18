@@ -2,26 +2,14 @@
   @let controls = todoForm.controls;
 
   <div class="todo__toolbar">
-  <form
-    class="todo__header"
-    [formGroup]="todoForm"
-    #todoFormDirective="ngForm"
-    (ngSubmit)="addTodo(todoFormDirective)"
-  >
-    <ui-input label="List Title" [type]="uiInputType.Text" [control]="controls.name" />
+    <form class="todo__header" [formGroup]="todoForm" #todoFormDirective="ngForm" (ngSubmit)="addTodo(todoFormDirective)">
+      <ui-input label="List Title" [type]="uiInputType.Text" [control]="controls.name" />
 
-    <ui-button
-      class="todo__add-list"
-      type="submit"
-      [disabled]="todoForm.invalid"
-      [pending]="isAddTodoPending()"
-    >
-      Add List
-    </ui-button>
-  </form>
+      <ui-button class="todo__add-list" type="submit" [disabled]="todoForm.invalid" [pending]="isAddTodoPending()"> Add List </ui-button>
+    </form>
 
-  <ui-button type="button" priority="secondary" (click)="logout()">Logout</ui-button>
-</div>
+    <ui-button type="button" priority="secondary" (click)="logout()">Logout</ui-button>
+  </div>
 
   @if (todos().length) {
     <div class="todo__grid">

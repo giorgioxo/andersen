@@ -6,9 +6,7 @@ const SHELL_AUTH_TOKEN_KEY = 'shell-auth-token';
   providedIn: 'root',
 })
 export class ShellSessionService {
-  private readonly token = signal<string | null>(
-    sessionStorage.getItem(SHELL_AUTH_TOKEN_KEY),
-  );
+  private readonly token = signal<string | null>(sessionStorage.getItem(SHELL_AUTH_TOKEN_KEY));
 
   public readonly currentToken = this.token.asReadonly();
 

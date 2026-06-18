@@ -1,0 +1,48 @@
+<div class="history-table">
+  <mat-form-field class="history-table__filter">
+    <mat-label>Event Types</mat-label>
+
+    <mat-select [(ngModel)]="selectedEventTypes" multiple (selectionChange)="applyEventTypeFilter()">
+      @for (eventType of eventTypes; track eventType) {
+        <mat-option [value]="eventType">{{ eventLabels[eventType] }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="history-table__content" #tableContent>
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="index">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td mat-cell *matCellDef="let event; let rowIndex = index">
+          {{ getRowIndex(rowIndex) }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="eventName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Event Name</th>
+        <td mat-cell *matCellDef="let event">{{ getEventLabel(event) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date & Time</th>
+        <td mat-cell *matCellDef="let event">
+          {{ event.createdAt | date: 'MM/dd/yyyy HH:mm:ss' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="additionalInfo">
+        <th mat-header-cell *matHeaderCellDef>Additional Info</th>
+        <td mat-cell *matCellDef="let event">{{ event.additionalInfo }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">No history records found</td>
+      </tr>
+    </table>
+  </div>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25]" [pageSize]="5" showFirstLastButtons (page)="onPageChange()" />
+</div>
