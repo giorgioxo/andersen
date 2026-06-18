@@ -1,24 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { NotificationService } from '@andersen/shared-ui';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { AUTH_LOGIN_SUCCESS_EVENT } from '../core/auth-events.constants';
 import { SignInComponent } from './sign-in.component';
 import { AuthApiService } from '../services/auth-api.service';
-import { AuthSessionService } from '../services/auth-session.service';
 
 describe('SignInComponent', () => {
   let fixture: ComponentFixture<SignInComponent>;
   let component: SignInComponent;
-  let router: Router;
 
   const authApiServiceMock = {
     signIn: vi.fn(),
-  };
-
-  const authSessionServiceMock = {
-    setSession: vi.fn(),
   };
 
   beforeEach(async () => {
@@ -27,15 +22,11 @@ describe('SignInComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SignInComponent],
       providers: [
-        provideRouter([]),
         {
           provide: AuthApiService,
           useValue: authApiServiceMock,
         },
-        {
-          provide: AuthSessionService,
-          useValue: authSessionServiceMock,
-        },
+
         {
           provide: NotificationService,
           useValue: {
@@ -44,14 +35,16 @@ describe('SignInComponent', () => {
           },
         },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(SignInComponent, {
+        remove: {
+          imports: [RouterLink],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(SignInComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router);
-
-    vi.spyOn(router, 'navigate').mockResolvedValue(true);
-
     fixture.detectChanges();
   });
 
@@ -100,43 +93,30 @@ describe('SignInComponent', () => {
     });
   });
 
-  it('should save session after successful sign in', () => {
+  it('should dispatch login success event after successful sign in', () => {
+    const dispatchEventSpy = vi.spyOn(window, 'dispatchEvent');
+
     mockSuccessfulSignIn();
     setValidSignInForm();
 
     component['submitSignIn']();
 
-    expect(authSessionServiceMock.setSession).toHaveBeenCalledWith({
-      email: 'user@email.com',
-      token: 'token-123',
-    });
+    expect(dispatchEventSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: AUTH_LOGIN_SUCCESS_EVENT,
+      }),
+    );
   });
 
-  it('should navigate to profile after successful sign in', () => {
-    mockSuccessfulSignIn();
-    setValidSignInForm();
+  it('should not dispatch login success event when sign in fails', () => {
+    const dispatchEventSpy = vi.spyOn(window, 'dispatchEvent');
 
-    component['submitSignIn']();
-
-    expect(router.navigate).toHaveBeenCalledWith(['/auth/profile']);
-  });
-
-  it('should not save session when sign in fails', () => {
     mockFailedSignIn();
     setValidSignInForm();
 
     component['submitSignIn']();
 
-    expect(authSessionServiceMock.setSession).not.toHaveBeenCalled();
-  });
-
-  it('should not navigate when sign in fails', () => {
-    mockFailedSignIn();
-    setValidSignInForm();
-
-    component['submitSignIn']();
-
-    expect(router.navigate).not.toHaveBeenCalled();
+    expect(dispatchEventSpy).not.toHaveBeenCalled();
   });
 
   it('should not submit while sign in is pending', () => {

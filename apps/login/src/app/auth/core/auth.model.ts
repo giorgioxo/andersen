@@ -7,14 +7,3 @@ export interface IAuthResult {
   token: string;
   statusCode: number;
 }
-
-export interface IAuthSession {
-  email: string;
-  token: string;
-}
-
-export interface ILogoutPayload {
-  email: string;
-  password: string;
-  token: string;
-}
