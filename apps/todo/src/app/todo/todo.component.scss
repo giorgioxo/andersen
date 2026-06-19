@@ -8,6 +8,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    gap: var(--ui-spacing-md);
     margin-bottom: var(--ui-spacing-lg);
     border-bottom: var(--ui-border-width-sm) solid var(--ui-color-border);
   }
@@ -15,18 +16,24 @@
   &__header {
     display: flex;
     align-items: flex-start;
-    margin-bottom: var(--ui-spacing-lg);
+    flex: 1;
+    min-width: 0;
     border-radius: var(--ui-radius-xm);
 
     ui-input {
       width: 100%;
       margin-right: var(--ui-spacing-md);
     }
+
+    ui-button {
+      min-width: var(--ui-button-size-md);
+    }
   }
 
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, var(--ui-card-width-md));
+    justify-content: center;
     gap: var(--ui-spacing-lg);
   }
 
@@ -39,5 +46,54 @@
   &__add-list {
     margin-top: var(--ui-spacing-sm);
     width: var(--ui-button-size-md);
+  }
+
+  &__actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--ui-spacing-sm);
+    margin-top: var(--ui-spacing-sm);
+  }
+}
+
+@media (max-width: 600px) {
+  .todo {
+    padding-inline: var(--ui-spacing-md);
+
+    &__toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    &__actions {
+      justify-content: flex-end;
+      margin-bottom: var(--ui-spacing-md);
+    }
+  }
+}
+
+@media (max-width: 440px) {
+  .todo {
+    &__header {
+      flex-direction: column;
+      gap: var(--ui-spacing-sm);
+
+      ui-input {
+        margin-right: 0;
+      }
+    }
+
+    &__add-list {
+      width: 100%;
+      margin-top: 0;
+    }
+
+    &__actions {
+      justify-content: stretch;
+
+      ui-button {
+        flex: 1;
+      }
+    }
   }
 }

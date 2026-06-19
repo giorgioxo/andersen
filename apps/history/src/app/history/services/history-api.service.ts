@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { IHistoryQuery, IHistoryResponse } from '../core/history.model';
+import { IHistoryApiEvent, IHistoryQuery } from '../core/history.model';
 
 const BASE_API_URL = environment.historyApiBaseUrl;
 
@@ -13,8 +13,8 @@ const BASE_API_URL = environment.historyApiBaseUrl;
 export class HistoryApiService {
   private readonly http = inject(HttpClient);
 
-  public getHistory(token: string, query: IHistoryQuery): Observable<IHistoryResponse> {
-    return this.http.get<IHistoryResponse>(`${BASE_API_URL}/history`, {
+  public getHistory(token: string, query: IHistoryQuery): Observable<IHistoryApiEvent[]> {
+    return this.http.get<IHistoryApiEvent[]>(`${BASE_API_URL}/history`, {
       headers: {
         'T-Auth': token,
       },

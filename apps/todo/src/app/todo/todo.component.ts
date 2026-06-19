@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UiButtonComponent, UiDialogService, UiInputComponent, UiInputType } from '@andersen/shared-ui';
@@ -11,7 +12,7 @@ import { TodoEventBridgeService } from './services/todo-event-bridge.service';
 
 @Component({
   selector: 'app-todo',
-  imports: [ReactiveFormsModule, UiInputComponent, UiButtonComponent, TodoListCardComponent],
+  imports: [ReactiveFormsModule, UiInputComponent, UiButtonComponent, TodoListCardComponent, RouterLink],
   templateUrl: './todo.component.html',
   styleUrl: './todo.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,8 +80,11 @@ export class TodoComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(() => {
-        this.todoForm.reset();
-        this.todoForm.controls.name.setErrors(null);
+        this.todoForm.reset({
+          name: '',
+        });
+
+        this.todoForm.updateValueAndValidity();
       });
   }
 

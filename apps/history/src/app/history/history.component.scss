@@ -6,7 +6,11 @@
 
   &__title {
     margin: 0;
-    font-size: 2rem;
-    font-weight: 600;
+    font-size: var(--ui-font-size-lg);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
   }
 }

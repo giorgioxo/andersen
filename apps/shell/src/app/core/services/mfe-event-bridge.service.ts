@@ -18,11 +18,19 @@ export class MfeEventBridgeService {
   private readonly router = inject(Router);
   private readonly shellSessionService = inject(ShellSessionService);
 
+  private isInitialized = false;
+
   public init(): void {
+    if (this.isInitialized) {
+      return;
+    }
+
     window.addEventListener(MFE_AUTH_LOGIN_SUCCESS_EVENT, this.handleLoginSuccess);
     window.addEventListener(MFE_AUTH_LOGOUT_EVENT, this.handleLogout);
     window.addEventListener(TODO_AUTH_TOKEN_REQUEST_EVENT, this.handleAuthTokenRequest);
     window.addEventListener(HISTORY_AUTH_TOKEN_REQUEST_EVENT, this.handleAuthTokenRequest);
+
+    this.isInitialized = true;
   }
 
   private readonly handleLoginSuccess = (event: Event): void => {

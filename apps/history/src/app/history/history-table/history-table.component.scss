@@ -8,20 +8,30 @@
 
   &__content {
     position: relative;
-    max-height: var(--ui-auth-panel-width);
+    max-height: 520px;
     overflow: auto;
     border: var(--ui-border-width-sm) solid var(--ui-color-border);
     border-radius: var(--ui-radius-md) var(--ui-radius-md) 0 0;
     background-color: var(--ui-color-white);
 
     &--loading {
-      opacity: 0.6;
       pointer-events: none;
     }
   }
 
   table {
     width: 100%;
+    min-width: var(--ui--auth-talbe-width);
+  }
+
+  &__loader {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ui-color-blur);
   }
 
   mat-paginator {

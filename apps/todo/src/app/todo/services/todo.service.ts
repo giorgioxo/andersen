@@ -4,6 +4,7 @@ import { catchError, EMPTY, Observable, tap } from 'rxjs';
 
 import { ITodo } from '../core/todo.models';
 import { TodoApiService } from './todo-api.service';
+import { TodoHistoryTrackingService } from './todo-history-tracking.service';
 import { TodoSessionService } from './todo-session.service';
 
 @Injectable({
@@ -11,6 +12,7 @@ import { TodoSessionService } from './todo-session.service';
 })
 export class TodoService {
   private readonly todoApiService = inject(TodoApiService);
+  private readonly todoHistoryTrackingService = inject(TodoHistoryTrackingService);
   private readonly todoSessionService = inject(TodoSessionService);
   private readonly notificationService = inject(NotificationService);
 
@@ -43,6 +45,7 @@ export class TodoService {
     return this.todoApiService.createTodo(token, { name }).pipe(
       tap((todo) => {
         this.todoItems.update((todos) => [...todos, todo]);
+        this.todoHistoryTrackingService.trackCreateTodo(todo.id, todo.name);
         this.notificationService.success('Todo added successfully');
       }),
       catchError(() => this.handleError('Failed to add todo')),
@@ -59,6 +62,7 @@ export class TodoService {
     return this.todoApiService.deleteTodo(token, todoId).pipe(
       tap(() => {
         this.todoItems.update((todos) => todos.filter(({ id }) => id !== todoId));
+        this.todoHistoryTrackingService.trackDeleteTodo(todoId);
         this.notificationService.success('Todo deleted successfully');
       }),
       catchError(() => this.handleError('Failed to delete todo')),
@@ -75,6 +79,7 @@ export class TodoService {
     return this.todoApiService.createTask(token, todoId, { name }).pipe(
       tap((updatedTodo) => {
         this.updateTodoItem(updatedTodo);
+        this.todoHistoryTrackingService.trackCreateTask(todoId, name);
       }),
       catchError(() => this.handleError('Failed to add task')),
     );
@@ -90,6 +95,7 @@ export class TodoService {
     return this.todoApiService.deleteTask(token, todoId, taskId).pipe(
       tap((updatedTodo) => {
         this.updateTodoItem(updatedTodo);
+        this.todoHistoryTrackingService.trackDeleteTask(todoId, taskId);
         this.notificationService.success('Task deleted successfully');
       }),
       catchError(() => this.handleError('Failed to delete task')),
@@ -138,6 +144,7 @@ export class TodoService {
     return this.todoApiService.updateTask(token, todoId, taskId, payload).pipe(
       tap((updatedTodo) => {
         this.updateTodoItem(updatedTodo);
+        this.todoHistoryTrackingService.trackUpdateTask(todoId, taskId, payload.name, payload.completed);
       }),
       catchError(() => this.handleError('Failed to update task')),
     );

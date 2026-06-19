@@ -2,9 +2,9 @@
   <mat-form-field class="history-table__filter">
     <mat-label>Event Types</mat-label>
 
-    <mat-select [(ngModel)]="selectedEventTypes" multiple (selectionChange)="applyEventTypeFilter()">
-      @for (eventType of eventTypes; track eventType) {
-        <mat-option [value]="eventType">{{ eventLabels[eventType] }}</mat-option>
+    <mat-select [(ngModel)]="selectedEventTypes" multiple [disabled]="isLoading()" (selectionChange)="applyEventTypeFilter()">
+      @for (eventOption of eventOptions; track eventOption.value) {
+        <mat-option [value]="eventOption.value">{{ eventOption.label }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
@@ -12,7 +12,7 @@
   <div class="history-table__content" #tableContent [class.history-table__content--loading]="isLoading()">
     <table
       mat-table
-      [dataSource]="dataSource"
+      [dataSource]="events()"
       matSort
       matSortDisableClear
       matSortActive="createdAt"
@@ -32,7 +32,7 @@
       </ng-container>
 
       <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date & Time</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="isLoading()">Date & Time</th>
         <td mat-cell *matCellDef="let event">
           {{ event.createdAt | date: 'MM/dd/yyyy HH:mm:ss' }}
         </td>
@@ -50,14 +50,21 @@
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">No history records found</td>
       </tr>
     </table>
+
+    @if (isLoading()) {
+      <div class="history-table__loader">
+        <ui-spinner size="small" />
+      </div>
+    }
   </div>
 
   <mat-paginator
     [length]="totalItems()"
-    [pageSizeOptions]="[5, 10, 25]"
     [pageSize]="query().limit"
     [pageIndex]="query().page - 1"
+    hidePageSize
     showFirstLastButtons
+    [disabled]="isLoading()"
     (page)="onPageChange($event)"
   />
 </div>
