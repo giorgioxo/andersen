@@ -1,13 +1,13 @@
-export const DELETE_TODO_DIALOG_DATA = {
-  title: 'Delete list',
-  description: 'Are you sure you want to delete this list?',
-  confirmText: 'Delete',
-  cancelText: 'Cancel',
+export const DELETE_TODO_DIALOG_TRANSLATION_KEYS = {
+  title: 'todo.dialogs.deleteListTitle',
+  description: 'todo.dialogs.deleteListDescription',
+  confirmText: 'todo.dialogs.confirm',
+  cancelText: 'todo.dialogs.cancel',
 } as const;
 
-export const DELETE_TASK_DIALOG_DATA = {
-  title: 'Delete task',
-  description: 'Are you sure you want to delete this task?',
-  confirmText: 'Delete',
-  cancelText: 'Cancel',
+export const DELETE_TASK_DIALOG_TRANSLATION_KEYS = {
+  title: 'todo.dialogs.deleteTaskTitle',
+  description: 'todo.dialogs.deleteTaskDescription',
+  confirmText: 'todo.dialogs.confirm',
+  cancelText: 'todo.dialogs.cancel',
 } as const;

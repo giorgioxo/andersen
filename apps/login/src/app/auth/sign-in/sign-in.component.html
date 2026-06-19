@@ -1,13 +1,29 @@
 @let controls = signInForm.controls;
 
 <form class="sign-in" [formGroup]="signInForm" (ngSubmit)="submitSignIn()">
-  <h1 class="sign-in__title">Sign In</h1>
+  <h1 class="sign-in__title">
+    {{ 'login.signIn.title' | translate }}
+  </h1>
 
-  <ui-input label="Login" [type]="uiInputType.Text" [control]="controls.username" />
+  <ui-input
+    [label]="'login.fields.login' | translate"
+    [type]="uiInputType.Text"
+    [control]="controls.username"
+    [errorMessages]="validationMessages()"
+  />
 
-  <ui-input label="Password" [type]="uiInputType.Password" [control]="controls.password" />
+  <ui-input
+    [label]="'login.fields.password' | translate"
+    [type]="uiInputType.Password"
+    [control]="controls.password"
+    [errorMessages]="validationMessages()"
+  />
 
-  <ui-button type="submit" [loading]="isSignInPending()" [disabled]="signInForm.invalid">Sign In</ui-button>
+  <ui-button type="submit" [loading]="isSignInPending()" [disabled]="signInForm.invalid">
+    {{ 'login.signIn.submit' | translate }}
+  </ui-button>
 
-  <button type="button" class="sign-in__link" routerLink="/auth/reset-password">Reset Password</button>
+  <button type="button" class="sign-in__link" routerLink="/auth/reset-password">
+    {{ 'login.signIn.resetPassword' | translate }}
+  </button>
 </form>

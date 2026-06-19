@@ -7,9 +7,11 @@ import {
   MFE_AUTH_LOGOUT_EVENT,
   SHELL_AUTH_TOKEN_EVENT,
   TODO_AUTH_TOKEN_REQUEST_EVENT,
+  MFE_LANGUAGE_REQUEST_EVENT,
 } from '../constants/mfe-events.constants';
 import { IAuthLoginSuccessEventDetail } from '../models/mfe-events.model';
 import { ShellSessionService } from './shell-session.service';
+import { ShellLanguageService } from './shell-language.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +19,7 @@ import { ShellSessionService } from './shell-session.service';
 export class MfeEventBridgeService {
   private readonly router = inject(Router);
   private readonly shellSessionService = inject(ShellSessionService);
+  private readonly shellLanguageService = inject(ShellLanguageService);
 
   private isInitialized = false;
 
@@ -29,6 +32,7 @@ export class MfeEventBridgeService {
     window.addEventListener(MFE_AUTH_LOGOUT_EVENT, this.handleLogout);
     window.addEventListener(TODO_AUTH_TOKEN_REQUEST_EVENT, this.handleAuthTokenRequest);
     window.addEventListener(HISTORY_AUTH_TOKEN_REQUEST_EVENT, this.handleAuthTokenRequest);
+    window.addEventListener(MFE_LANGUAGE_REQUEST_EVENT, this.handleLanguageRequest);
 
     this.isInitialized = true;
   }
@@ -64,4 +68,8 @@ export class MfeEventBridgeService {
       }),
     );
   }
+
+  private readonly handleLanguageRequest = (): void => {
+    this.shellLanguageService.dispatchCurrentLanguage();
+  };
 }

@@ -7,6 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { UiSpinnerComponent } from '@andersen/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { DEFAULT_HISTORY_SORT_DIRECTION, HISTORY_EVENT_OPTIONS, HISTORY_EVENT_TYPES } from '../core/history.constants';
 import { HistoryEventType, IHistoryEvent, IHistoryQuery } from '../core/history.model';
@@ -22,6 +23,7 @@ import { HistoryEventType, IHistoryEvent, IHistoryQuery } from '../core/history.
     MatSortModule,
     MatTableModule,
     UiSpinnerComponent,
+    TranslatePipe,
   ],
   templateUrl: './history-table.component.html',
   styleUrl: './history-table.component.scss',
@@ -34,13 +36,10 @@ export class HistoryTableComponent implements OnInit {
   public readonly totalItems = input.required<number>();
   public readonly query = input.required<IHistoryQuery>();
   public readonly isLoading = input(false);
-
   public readonly queryChange = output<IHistoryQuery>();
 
-  protected readonly eventTypes = HISTORY_EVENT_TYPES;
   protected readonly eventOptions = HISTORY_EVENT_OPTIONS;
   protected readonly displayedColumns = ['index', 'eventName', 'createdAt', 'additionalInfo'];
-
   protected selectedEventTypes: HistoryEventType[] = [];
 
   ngOnInit(): void {
@@ -48,56 +47,41 @@ export class HistoryTableComponent implements OnInit {
   }
 
   protected applyEventTypeFilter(): void {
-    if (this.isLoading()) {
-      return;
-    }
-
-    this.queryChange.emit({
-      ...this.query(),
-      page: 1,
-      event: this.selectedEventTypes,
-    });
-
-    this.scrollToTableTop();
+    this.emitQuery({ page: 1, event: this.selectedEventTypes });
   }
 
   protected onPageChange(event: PageEvent): void {
-    if (this.isLoading()) {
-      return;
-    }
-
-    this.queryChange.emit({
-      ...this.query(),
+    this.emitQuery({
       page: event.pageIndex + 1,
       limit: event.pageSize,
     });
-
-    this.scrollToTableTop();
   }
 
   protected onSortChange(event: Sort): void {
-    if (this.isLoading()) {
-      return;
-    }
-
-    this.queryChange.emit({
-      ...this.query(),
+    this.emitQuery({
       page: 1,
       sort: event.direction || DEFAULT_HISTORY_SORT_DIRECTION,
     });
-
-    this.scrollToTableTop();
   }
 
   protected getRowIndex(rowIndex: number): number {
     return (this.query().page - 1) * this.query().limit + rowIndex + 1;
   }
 
-  protected getEventLabel(event: IHistoryEvent): string {
-    return this.eventOptions.find(({ value }) => value === event.type)?.label ?? event.type;
+  protected getEventTranslationKey(event: IHistoryEvent): string {
+    return this.eventOptions.find(({ value }) => value === event.type)?.translationKey ?? event.type;
   }
 
-  private scrollToTableTop(): void {
+  private emitQuery(queryChanges: Partial<IHistoryQuery>): void {
+    if (this.isLoading()) {
+      return;
+    }
+
+    this.queryChange.emit({
+      ...this.query(),
+      ...queryChanges,
+    });
+
     this.tableContent().nativeElement.scrollTo({
       top: 0,
       behavior: 'smooth',

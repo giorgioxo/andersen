@@ -8,10 +8,11 @@ import { HistoryEventBridgeService } from './services/history-event-bridge.servi
 import { HistoryService } from './services/history.service';
 
 import { UiButtonComponent } from '@andersen/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-history',
-  imports: [HistoryTableComponent, RouterLink, UiButtonComponent],
+  imports: [HistoryTableComponent, RouterLink, UiButtonComponent, TranslatePipe],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

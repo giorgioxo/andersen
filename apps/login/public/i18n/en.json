@@ -1,0 +1,45 @@
+{
+  "login": {
+    "fields": {
+      "login": "Login",
+      "password": "Password",
+      "newPassword": "New Password",
+      "repeatPassword": "Repeat Password"
+    },
+
+    "signIn": {
+      "title": "Sign In",
+      "submit": "Sign In",
+      "resetPassword": "Reset Password"
+    },
+    "resetPassword": {
+      "title": "Password Recovery",
+      "submit": "Reset"
+    },
+    "registration": {
+      "title": "Registration",
+      "submit": "Register"
+    },
+    "navigation": {
+      "signIn": "Login",
+      "registration": "Register"
+    },
+    "notifications": {
+      "signInSuccess": "{{email}} signed in successfully",
+      "signInFailed": "Sign in failed",
+      "registrationSuccess": "{{email}} registered successfully",
+      "registrationFailed": "Registration failed",
+      "passwordResetSuccess": "Password for {{email}} was reset successfully",
+      "passwordResetFailed": "Password reset failed"
+    },
+    "validation": {
+      "required": "This field is required",
+      "email": "Enter a valid email address",
+      "minlength": "Must contain at least 8 characters",
+      "pattern": "Only Latin letters and numbers are allowed",
+      "passwordPolicy": "Password must be at least 8 characters and contain at least two uppercase letters, one number, and one special character.",
+      "passwordMismatch": "Passwords do not match",
+      "invalid": "The entered value is invalid"
+    }
+  }
+}

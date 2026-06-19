@@ -1,0 +1,44 @@
+{
+  "login": {
+    "fields": {
+      "login": "ლოგინი",
+      "password": "პაროლი",
+      "newPassword": "ახალი პაროლი",
+      "repeatPassword": "გაიმეორეთ პაროლი"
+    },
+    "validation": {
+      "required": "ველის შევსება სავალდებულოა",
+      "email": "შეიყვანეთ სწორი ელფოსტის მისამართი",
+      "minlength": "მნიშვნელობა უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს",
+      "pattern": "დასაშვებია მხოლოდ ლათინური ასოები და ციფრები",
+      "passwordPolicy": "პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს, ორ დიდ ასოს, ერთ ციფრს და ერთ სპეციალურ სიმბოლოს.",
+      "passwordMismatch": "პაროლები არ ემთხვევა",
+      "invalid": "შეყვანილი მნიშვნელობა არასწორია"
+    },
+    "signIn": {
+      "title": "შესვლა",
+      "submit": "შესვლა",
+      "resetPassword": "პაროლის აღდგენა"
+    },
+    "resetPassword": {
+      "title": "პაროლის აღდგენა",
+      "submit": "აღდგენა"
+    },
+    "registration": {
+      "title": "რეგისტრაცია",
+      "submit": "რეგისტრაცია"
+    },
+    "navigation": {
+      "signIn": "შესვლა",
+      "registration": "რეგისტრაცია"
+    },
+    "notifications": {
+      "signInSuccess": "{{email}} წარმატებით შევიდა სისტემაში",
+      "signInFailed": "სისტემაში შესვლა ვერ მოხერხდა",
+      "registrationSuccess": "{{email}} წარმატებით დარეგისტრირდა",
+      "registrationFailed": "რეგისტრაცია ვერ მოხერხდა",
+      "passwordResetSuccess": "{{email}}-ისთვის პაროლი წარმატებით განახლდა",
+      "passwordResetFailed": "პაროლის განახლება ვერ მოხერხდა"
+    }
+  }
+}

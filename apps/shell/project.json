@@ -18,6 +18,21 @@
           {
             "glob": "**/*",
             "input": "apps/shell/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/login/public/i18n",
+            "output": "i18n/login"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/todo/public/i18n",
+            "output": "i18n/todo"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/history/public/i18n",
+            "output": "i18n/history"
           }
         ],
         "styles": ["apps/shell/src/styles.scss"]

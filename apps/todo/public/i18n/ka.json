@@ -1,0 +1,42 @@
+{
+  "todo": {
+    "fields": {
+      "listTitle": "სიის სათაური",
+      "taskDescription": "დავალების აღწერა"
+    },
+    "actions": {
+      "addList": "სიის დამატება",
+      "history": "ისტორია",
+      "logout": "გასვლა",
+      "addTask": "დავალების დამატება",
+      "deleteList": "სიის წაშლა",
+      "save": "შენახვა",
+      "cancel": "გაუქმება",
+      "edit": "რედაქტირება",
+      "delete": "წაშლა"
+    },
+    "empty": "სიები ვერ მოიძებნა. შექმენით პირველი სია ზემოთ.",
+    "dialogs": {
+      "deleteListTitle": "სიის წაშლა",
+      "deleteListDescription": "ნამდვილად გსურთ ამ სიის წაშლა?",
+      "deleteTaskTitle": "დავალების წაშლა",
+      "deleteTaskDescription": "ნამდვილად გსურთ ამ დავალების წაშლა?",
+      "confirm": "წაშლა",
+      "cancel": "გაუქმება"
+    },
+    "notifications": {
+      "tokenMissing": "ავტორიზაციის token არ არსებობს",
+      "loadFailed": "სიების ჩატვირთვა ვერ მოხერხდა",
+      "todoAdded": "სია წარმატებით დაემატა",
+      "todoAddFailed": "სიის დამატება ვერ მოხერხდა",
+      "todoDeleted": "სია წარმატებით წაიშალა",
+      "todoDeleteFailed": "სიის წაშლა ვერ მოხერხდა",
+      "taskAddFailed": "დავალების დამატება ვერ მოხერხდა",
+      "taskDeleted": "დავალება წარმატებით წაიშალა",
+      "taskDeleteFailed": "დავალების წაშლა ვერ მოხერხდა",
+      "taskNotFound": "დავალება ვერ მოიძებნა",
+      "taskUpdated": "დავალება წარმატებით განახლდა",
+      "taskUpdateFailed": "დავალების განახლება ვერ მოხერხდა"
+    }
+  }
+}

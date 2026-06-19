@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, inject, input, output, signal } fro
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { UiButtonComponent, UiInputComponent, UiInputType } from '@andersen/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { ITodoTask } from '../core/todo.models';
 
 @Component({
   selector: 'app-todo-task-item',
-  imports: [ReactiveFormsModule, UiButtonComponent, UiInputComponent, MatCheckboxModule],
+  imports: [ReactiveFormsModule, MatCheckboxModule, UiButtonComponent, UiInputComponent, TranslatePipe],
   templateUrl: './todo-task-item.component.html',
   styleUrl: './todo-task-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,7 +24,6 @@ export class TodoTaskItemComponent {
   public readonly updateTask = output<{ taskId: string; name: string }>();
 
   protected readonly isEditing = signal(false);
-
   protected readonly uiInputType = UiInputType;
 
   protected readonly editForm = this.formBuilder.group({
@@ -31,19 +31,15 @@ export class TodoTaskItemComponent {
   });
 
   protected onDeleteTask(): void {
-    if (this.isLoading()) {
-      return;
+    if (!this.isLoading()) {
+      this.deleteTask.emit(this.task().id);
     }
-
-    this.deleteTask.emit(this.task().id);
   }
 
   protected onCompletedChange(): void {
-    if (this.isLoading()) {
-      return;
+    if (!this.isLoading()) {
+      this.completedChange.emit(this.task().id);
     }
-
-    this.completedChange.emit(this.task().id);
   }
 
   protected startEdit(): void {
@@ -61,11 +57,9 @@ export class TodoTaskItemComponent {
       return;
     }
 
-    const { name } = this.editForm.getRawValue();
-
     this.updateTask.emit({
       taskId: this.task().id,
-      name,
+      name: this.editForm.getRawValue().name,
     });
 
     this.isEditing.set(false);

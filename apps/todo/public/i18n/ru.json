@@ -1,0 +1,42 @@
+{
+  "todo": {
+    "fields": {
+      "listTitle": "Название списка",
+      "taskDescription": "Описание задачи"
+    },
+    "actions": {
+      "addList": "Добавить список",
+      "history": "История",
+      "logout": "Выйти",
+      "addTask": "Добавить задачу",
+      "deleteList": "Удалить список",
+      "save": "Сохранить",
+      "cancel": "Отмена",
+      "edit": "Редактировать",
+      "delete": "Удалить"
+    },
+    "empty": "Списки не найдены. Создайте первый список выше.",
+    "dialogs": {
+      "deleteListTitle": "Удалить список",
+      "deleteListDescription": "Вы уверены, что хотите удалить этот список?",
+      "deleteTaskTitle": "Удалить задачу",
+      "deleteTaskDescription": "Вы уверены, что хотите удалить эту задачу?",
+      "confirm": "Удалить",
+      "cancel": "Отмена"
+    },
+    "notifications": {
+      "tokenMissing": "Токен аутентификации отсутствует",
+      "loadFailed": "Не удалось загрузить списки",
+      "todoAdded": "Список успешно добавлен",
+      "todoAddFailed": "Не удалось добавить список",
+      "todoDeleted": "Список успешно удалён",
+      "todoDeleteFailed": "Не удалось удалить список",
+      "taskAddFailed": "Не удалось добавить задачу",
+      "taskDeleted": "Задача успешно удалена",
+      "taskDeleteFailed": "Не удалось удалить задачу",
+      "taskNotFound": "Задача не найдена",
+      "taskUpdated": "Задача успешно обновлена",
+      "taskUpdateFailed": "Не удалось обновить задачу"
+    }
+  }
+}

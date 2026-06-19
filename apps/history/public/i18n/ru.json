@@ -1,0 +1,33 @@
+{
+  "history": {
+    "title": "История",
+    "dashboard": "Панель задач",
+    "eventTypes": "Типы событий",
+    "columns": {
+      "number": "№",
+      "eventName": "Название события",
+      "dateTime": "Дата и время",
+      "additionalInfo": "Дополнительная информация"
+    },
+    "empty": "Записи истории не найдены",
+    "events": {
+      "createTodo": "Список создан",
+      "deleteTodo": "Список удалён",
+      "createTask": "Задача создана",
+      "deleteTask": "Задача удалена",
+      "updateTask": "Статус задачи обновлён"
+    },
+    "paginator": {
+      "itemsPerPage": "Записей на странице",
+      "nextPage": "Следующая страница",
+      "previousPage": "Предыдущая страница",
+      "firstPage": "Первая страница",
+      "lastPage": "Последняя страница",
+      "range": "Показано {{start}}-{{end}} из {{total}}"
+    },
+    "notifications": {
+      "tokenMissing": "Токен аутентификации отсутствует",
+      "loadFailed": "Не удалось загрузить историю"
+    }
+  }
+}

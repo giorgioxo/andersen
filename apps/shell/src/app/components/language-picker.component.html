@@ -1,0 +1,11 @@
+<mat-form-field class="language-picker" appearance="outline">
+  <mat-label>Language</mat-label>
+
+  <mat-select [value]="selectedLanguage()" (selectionChange)="selectLanguage($event)">
+    @for (language of languageOptions; track language.value) {
+      <mat-option [value]="language.value">
+        {{ language.label }}
+      </mat-option>
+    }
+  </mat-select>
+</mat-form-field>
