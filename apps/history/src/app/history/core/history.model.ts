@@ -8,6 +8,13 @@ export enum HistoryEventType {
 
 export type HistorySortDirection = 'asc' | 'desc';
 
+export interface IHistoryApiEvent {
+  todo_id: string;
+  event: HistoryEventType;
+  data: Record<string, unknown>;
+  date: string;
+}
+
 export interface IHistoryEvent {
   id: string;
   type: HistoryEventType;
@@ -20,9 +27,4 @@ export interface IHistoryQuery {
   page: number;
   event: HistoryEventType[];
   sort: HistorySortDirection;
-}
-
-export interface IHistoryResponse {
-  items: IHistoryEvent[];
-  total: number;
 }

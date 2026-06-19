@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroupDirective } from '@angular/forms';
+import { provideRouter } from '@angular/router';
 import { UiDialogService } from '@andersen/shared-ui';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TodoComponent } from './todo.component';
-import { TodoService } from './services/todo.service';
 import { TodoEventBridgeService } from './services/todo-event-bridge.service';
+import { TodoService } from './services/todo.service';
 
 describe('TodoComponent', () => {
   let fixture: ComponentFixture<TodoComponent>;
@@ -49,18 +50,10 @@ describe('TodoComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TodoComponent],
       providers: [
-        {
-          provide: TodoService,
-          useValue: todoServiceMock,
-        },
-        {
-          provide: TodoEventBridgeService,
-          useValue: todoEventBridgeServiceMock,
-        },
-        {
-          provide: UiDialogService,
-          useValue: dialogServiceMock,
-        },
+        provideRouter([]),
+        { provide: TodoService, useValue: todoServiceMock },
+        { provide: TodoEventBridgeService, useValue: todoEventBridgeServiceMock },
+        { provide: UiDialogService, useValue: dialogServiceMock },
       ],
     }).compileComponents();
 
@@ -80,9 +73,7 @@ describe('TodoComponent', () => {
   });
 
   it('should add todo with trimmed name', () => {
-    component['todoForm'].setValue({
-      name: ' Work ',
-    });
+    component['todoForm'].setValue({ name: ' Work ' });
 
     component['addTodo'](formGroupDirectiveMock);
 
@@ -104,10 +95,7 @@ describe('TodoComponent', () => {
   });
 
   it('should add task with trimmed name', () => {
-    component['addTask']({
-      todoId: 'todo-123',
-      name: ' Task 1 ',
-    });
+    component['addTask']({ todoId: 'todo-123', name: ' Task 1 ' });
 
     expect(todoServiceMock.addTask).toHaveBeenCalledWith('todo-123', 'Task 1');
   });
@@ -115,10 +103,7 @@ describe('TodoComponent', () => {
   it('should not add task while todo is loading', () => {
     component['loadingTodoId'].set('todo-123');
 
-    component['addTask']({
-      todoId: 'todo-123',
-      name: 'Task 1',
-    });
+    component['addTask']({ todoId: 'todo-123', name: 'Task 1' });
 
     expect(todoServiceMock.addTask).not.toHaveBeenCalled();
   });

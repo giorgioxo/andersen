@@ -3,7 +3,8 @@ import { NotificationService } from '@andersen/shared-ui';
 import { catchError, EMPTY, finalize, Observable, tap } from 'rxjs';
 
 import { INITIAL_HISTORY_QUERY } from '../core/history.constants';
-import { IHistoryEvent, IHistoryQuery, IHistoryResponse } from '../core/history.model';
+import { mapHistoryApiEvent } from '../core/history.mapper';
+import { IHistoryApiEvent, IHistoryEvent, IHistoryQuery } from '../core/history.model';
 import { HistoryApiService } from './history-api.service';
 import { HistorySessionService } from './history-session.service';
 
@@ -28,8 +29,13 @@ export class HistoryService {
   public updateQuery(query: IHistoryQuery): void {
     this.query.set(query);
   }
+  private getEstimatedTotal(currentPageItemsCount: number): number {
+    const { page, limit } = this.query();
+    const loadedItemsCount = (page - 1) * limit + currentPageItemsCount;
 
-  public loadHistory(): Observable<IHistoryResponse> {
+    return currentPageItemsCount === limit ? loadedItemsCount + 1 : loadedItemsCount;
+  }
+  public loadHistory(): Observable<IHistoryApiEvent[]> {
     const token = this.historySessionService.getToken();
 
     if (!token) {
@@ -40,9 +46,11 @@ export class HistoryService {
     this.loading.set(true);
 
     return this.historyApiService.getHistory(token, this.query()).pipe(
-      tap(({ items, total }) => {
-        this.historyItems.set(items);
-        this.totalItems.set(total);
+      tap((events) => {
+        const historyEvents = events.map(mapHistoryApiEvent);
+
+        this.historyItems.set(historyEvents);
+        this.totalItems.set(this.getEstimatedTotal(historyEvents.length));
       }),
       catchError(() => {
         this.notificationService.error('Failed to load history');

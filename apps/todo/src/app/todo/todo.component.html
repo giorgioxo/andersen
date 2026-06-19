@@ -8,7 +8,10 @@
       <ui-button class="todo__add-list" type="submit" [disabled]="todoForm.invalid" [pending]="isAddTodoPending()"> Add List </ui-button>
     </form>
 
-    <ui-button type="button" priority="secondary" (click)="logout()">Logout</ui-button>
+    <div class="todo__actions">
+      <ui-button type="button" priority="secondary" routerLink="/history">History</ui-button>
+      <ui-button type="button" priority="secondary" (click)="logout()">Logout</ui-button>
+    </div>
   </div>
 
   @if (todos().length) {

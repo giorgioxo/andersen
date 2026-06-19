@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { HistoryTableComponent } from './history-table/history-table.component';
@@ -6,9 +7,11 @@ import { IHistoryQuery } from './core/history.model';
 import { HistoryEventBridgeService } from './services/history-event-bridge.service';
 import { HistoryService } from './services/history.service';
 
+import { UiButtonComponent } from '@andersen/shared-ui';
+
 @Component({
   selector: 'app-history',
-  imports: [HistoryTableComponent],
+  imports: [HistoryTableComponent, RouterLink, UiButtonComponent],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
