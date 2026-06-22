@@ -1,13 +1,14 @@
 @let controls = registrationForm.controls;
 
-<form class="registration" [formGroup]="registrationForm" (ngSubmit)="submitRegistration()">
-  <h1 class="registration__title">
+<form class="registration" [formGroup]="registrationForm" aria-labelledby="registration-title" (ngSubmit)="submitRegistration()">
+  <h1 id="registration-title" class="registration__title">
     {{ 'login.registration.title' | translate }}
   </h1>
 
   <ui-input
     [label]="'login.fields.login' | translate"
     [type]="uiInputType.Text"
+    [autocomplete]="uiInputAutocomplete.Email"
     [control]="controls.username"
     [errorMessages]="validationMessages()"
   />
@@ -15,20 +16,26 @@
   <ui-input
     [label]="'login.fields.password' | translate"
     [type]="uiInputType.Password"
+    [autocomplete]="uiInputAutocomplete.NewPassword"
     [control]="controls.password"
     [errorMessages]="validationMessages()"
+    [showPasswordLabel]="'login.accessibility.showPassword' | translate"
+    [hidePasswordLabel]="'login.accessibility.hidePassword' | translate"
   />
 
   <div class="registration__password-check">
     <ui-input
       [label]="'login.fields.repeatPassword' | translate"
       [type]="uiInputType.Password"
+      [autocomplete]="uiInputAutocomplete.NewPassword"
       [control]="controls.repeatPassword"
       [errorMessages]="validationMessages()"
+      [showPasswordLabel]="'login.accessibility.showPassword' | translate"
+      [hidePasswordLabel]="'login.accessibility.hidePassword' | translate"
     />
 
     @if (registrationForm.hasError('passwordMismatch') && controls.repeatPassword.touched) {
-      <p class="registration__error">
+      <p class="registration__error" aria-live="polite">
         {{ validationMessages().passwordMismatch }}
       </p>
     }

@@ -1,11 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { NotificationService } from '@andersen/shared-ui';
+import { TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RegistrationComponent } from './registration.component';
 import { AuthApiService } from '../services/auth-api.service';
+import { AuthValidationMessagesService } from '../services/auth-validation-messages.service';
 
 describe('RegistrationComponent', () => {
   let fixture: ComponentFixture<RegistrationComponent>;
@@ -19,7 +21,21 @@ describe('RegistrationComponent', () => {
     navigate: vi.fn(),
   };
 
+  const notificationServiceMock = {
+    success: vi.fn(),
+    error: vi.fn(),
+  };
+
+  const translateServiceMock = {
+    instant: vi.fn((key: string) => key),
+  };
+
+  const authValidationMessagesServiceMock = {
+    messages: {},
+  };
+
   beforeEach(async () => {
+    vi.restoreAllMocks();
     vi.clearAllMocks();
 
     await TestBed.configureTestingModule({
@@ -35,18 +51,55 @@ describe('RegistrationComponent', () => {
         },
         {
           provide: NotificationService,
-          useValue: {
-            success: vi.fn(),
-            error: vi.fn(),
-          },
+          useValue: notificationServiceMock,
+        },
+        {
+          provide: TranslateService,
+          useValue: translateServiceMock,
+        },
+        {
+          provide: AuthValidationMessagesService,
+          useValue: authValidationMessagesServiceMock,
         },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(RegistrationComponent, {
+        set: {
+          template: '',
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(RegistrationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
+  const setValidRegistrationForm = (): void => {
+    component['registrationForm'].setValue({
+      username: 'user@email.com',
+      password: '@@1234AB',
+      repeatPassword: '@@1234AB',
+    });
+  };
+
+  const mockSuccessfulRegistration = (): void => {
+    authApiServiceMock.register.mockReturnValue(
+      of({
+        email: 'user@email.com',
+      }),
+    );
+  };
+
+  const mockFailedRegistration = (): void => {
+    authApiServiceMock.register.mockReturnValue(
+      throwError(() => ({
+        error: {
+          error: 'Registration failed',
+        },
+      })),
+    );
+  };
 
   it('should not call register api when form is invalid', () => {
     component['submitRegistration']();
@@ -55,17 +108,8 @@ describe('RegistrationComponent', () => {
   });
 
   it('should call register api with form value', () => {
-    authApiServiceMock.register.mockReturnValue(
-      of({
-        email: 'user@email.com',
-      }),
-    );
-
-    component['registrationForm'].setValue({
-      username: 'user@email.com',
-      password: '@@1234AB',
-      repeatPassword: '@@1234AB',
-    });
+    mockSuccessfulRegistration();
+    setValidRegistrationForm();
 
     component['submitRegistration']();
 
@@ -76,17 +120,8 @@ describe('RegistrationComponent', () => {
   });
 
   it('should navigate to sign in after successful registration', () => {
-    authApiServiceMock.register.mockReturnValue(
-      of({
-        email: 'user@email.com',
-      }),
-    );
-
-    component['registrationForm'].setValue({
-      username: 'user@email.com',
-      password: '@@1234AB',
-      repeatPassword: '@@1234AB',
-    });
+    mockSuccessfulRegistration();
+    setValidRegistrationForm();
 
     component['submitRegistration']();
 
@@ -94,19 +129,8 @@ describe('RegistrationComponent', () => {
   });
 
   it('should not navigate when registration fails', () => {
-    authApiServiceMock.register.mockReturnValue(
-      throwError(() => ({
-        error: {
-          error: 'Registration failed',
-        },
-      })),
-    );
-
-    component['registrationForm'].setValue({
-      username: 'user@email.com',
-      password: '@@1234AB',
-      repeatPassword: '@@1234AB',
-    });
+    mockFailedRegistration();
+    setValidRegistrationForm();
 
     component['submitRegistration']();
 
@@ -115,12 +139,7 @@ describe('RegistrationComponent', () => {
 
   it('should not submit while registration is pending', () => {
     component['isRegistrationPending'].set(true);
-
-    component['registrationForm'].setValue({
-      username: 'user@email.com',
-      password: '@@1234AB',
-      repeatPassword: '@@1234AB',
-    });
+    setValidRegistrationForm();
 
     component['submitRegistration']();
 

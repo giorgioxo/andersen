@@ -3,13 +3,14 @@
     "title": "History",
     "dashboard": "Dashboard",
     "eventTypes": "Event Types",
+    "empty": "No history records found",
+    "loading": "Loading history",
     "columns": {
       "number": "No.",
       "eventName": "Event Name",
       "dateTime": "Date & Time",
       "additionalInfo": "Additional Info"
     },
-    "empty": "No history records found",
     "events": {
       "createTodo": "Todo List Created",
       "deleteTodo": "Todo List Deleted",
@@ -18,6 +19,7 @@
       "updateTask": "Task Status Updated"
     },
     "paginator": {
+      "label": "History pagination",
       "itemsPerPage": "Items per page",
       "nextPage": "Next page",
       "previousPage": "Previous page",

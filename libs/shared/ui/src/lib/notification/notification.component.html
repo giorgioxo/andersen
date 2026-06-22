@@ -1,7 +1,3 @@
-<div
-  class="ui-notification"
-  [class.ui-notification--success]="notification.status === 'success'"
-  [class.ui-notification--error]="notification.status === 'error'"
->
+<div class="ui-notification" [class.ui-notification--success]="isSuccess()" [class.ui-notification--error]="isError()">
   {{ notification.message }}
 </div>

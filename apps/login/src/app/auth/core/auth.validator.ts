@@ -2,8 +2,6 @@ import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@ang
 
 import { AUTH_VALIDATION_ERROR_KEYS } from './auth.constants';
 
-export const USERNAME_VALIDATORS: ValidatorFn[] = [Validators.required, Validators.minLength(8), Validators.pattern(/^[A-Za-z0-9]+$/)];
-
 export const EMAIL_VALIDATORS: ValidatorFn[] = [Validators.required, Validators.email];
 
 export const PASSWORD_VALIDATORS: ValidatorFn[] = [Validators.required, passwordPolicyValidator];

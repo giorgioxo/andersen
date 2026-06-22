@@ -9,10 +9,7 @@ import {
   TODO_AUTH_TOKEN_REQUEST_EVENT,
   TODO_LOGOUT_EVENT,
 } from '../core/todo-events.constants';
-import {
-  IShellAuthTokenEventDetail,
-  IShellLanguageChangeEventDetail,
-} from '../core/todo-events.model';
+import { IShellAuthTokenEventDetail, IShellLanguageChangeEventDetail } from '../core/todo-events.model';
 import { TodoService } from './todo.service';
 import { TodoSessionService } from './todo-session.service';
 
@@ -30,24 +27,12 @@ export class TodoEventBridgeService {
       return;
     }
 
-    window.addEventListener(
-      SHELL_AUTH_TOKEN_EVENT,
-      this.handleAuthToken,
-    );
-    window.addEventListener(
-      SHELL_LANGUAGE_CHANGE_EVENT,
-      this.handleLanguageChange,
-    );
+    window.addEventListener(SHELL_AUTH_TOKEN_EVENT, this.handleAuthToken);
+    window.addEventListener(SHELL_LANGUAGE_CHANGE_EVENT, this.handleLanguageChange);
 
     this.destroyRef.onDestroy(() => {
-      window.removeEventListener(
-        SHELL_AUTH_TOKEN_EVENT,
-        this.handleAuthToken,
-      );
-      window.removeEventListener(
-        SHELL_LANGUAGE_CHANGE_EVENT,
-        this.handleLanguageChange,
-      );
+      window.removeEventListener(SHELL_AUTH_TOKEN_EVENT, this.handleAuthToken);
+      window.removeEventListener(SHELL_LANGUAGE_CHANGE_EVENT, this.handleLanguageChange);
     });
 
     this.isInitialized = true;
@@ -62,35 +47,24 @@ export class TodoEventBridgeService {
   }
 
   private readonly handleAuthToken = (event: Event): void => {
-    const { token } = (
-      event as CustomEvent<IShellAuthTokenEventDetail>
-    ).detail;
+    const { token } = (event as CustomEvent<IShellAuthTokenEventDetail>).detail;
 
     this.todoSessionService.setToken(token);
 
-    this.todoService
-      .loadTodos()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+    this.todoService.loadTodos().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   };
 
   private readonly handleLanguageChange = (event: Event): void => {
-    const { language } = (
-      event as CustomEvent<IShellLanguageChangeEventDetail>
-    ).detail;
+    const { language } = (event as CustomEvent<IShellLanguageChangeEventDetail>).detail;
 
     this.translateService.use(language);
   };
 
   private requestLanguage(): void {
-    window.dispatchEvent(
-      new CustomEvent(MFE_LANGUAGE_REQUEST_EVENT),
-    );
+    window.dispatchEvent(new CustomEvent(MFE_LANGUAGE_REQUEST_EVENT));
   }
 
   private requestAuthToken(): void {
-    window.dispatchEvent(
-      new CustomEvent(TODO_AUTH_TOKEN_REQUEST_EVENT),
-    );
+    window.dispatchEvent(new CustomEvent(TODO_AUTH_TOKEN_REQUEST_EVENT));
   }
 }

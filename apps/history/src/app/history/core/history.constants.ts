@@ -1,4 +1,6 @@
-import { HistoryEventType, HistorySortDirection, IHistoryQuery } from './history.model';
+import type { SortDirection } from '@angular/material/sort';
+
+import { HistoryEventType, IHistoryQuery } from './history.model';
 
 export const HISTORY_EVENT_OPTIONS = [
   {
@@ -25,7 +27,16 @@ export const HISTORY_EVENT_OPTIONS = [
 
 export const HISTORY_EVENT_TYPES: HistoryEventType[] = HISTORY_EVENT_OPTIONS.map(({ value }) => value);
 
-export const DEFAULT_HISTORY_SORT_DIRECTION: HistorySortDirection = 'desc';
+export const HISTORY_PAGINATOR_TRANSLATION_KEYS = {
+  itemsPerPage: 'history.paginator.itemsPerPage',
+  nextPage: 'history.paginator.nextPage',
+  previousPage: 'history.paginator.previousPage',
+  firstPage: 'history.paginator.firstPage',
+  lastPage: 'history.paginator.lastPage',
+  range: 'history.paginator.range',
+} as const;
+
+export const DEFAULT_HISTORY_SORT_DIRECTION: Exclude<SortDirection, ''> = 'desc';
 
 export const HISTORY_PAGE_SIZE = 20;
 

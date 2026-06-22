@@ -1,16 +1,17 @@
 <button
   matButton="filled"
+  class="ui-button"
   [type]="type()"
   [disabled]="isDisabled()"
-  class="ui-button"
-  [class.ui-button--secondary]="priority() === 'secondary'"
+  [attr.aria-busy]="isLoading()"
+  [class.ui-button--secondary]="isSecondary()"
 >
   <span class="ui-button__content" [class.ui-button__content--hidden]="isLoading()">
     <ng-content />
   </span>
 
   @if (isLoading()) {
-    <span class="ui-button__spinner">
+    <span class="ui-button__spinner" aria-hidden="true">
       <ui-spinner size="small" />
     </span>
   }

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { UiButtonPriority, UiButtonType } from './button.model';
+
+import { transformUiButtonPriority, UiButtonPriority, UiButtonType } from './button.model';
 import { UiSpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
@@ -11,12 +12,18 @@ import { UiSpinnerComponent } from '../spinner/spinner.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiButtonComponent {
-  public readonly priority = input<UiButtonPriority>('primary');
+  public readonly priority = input(UiButtonPriority.Primary, {
+    transform: transformUiButtonPriority,
+  });
+
   public readonly type = input<UiButtonType>('button');
   public readonly disabled = input(false);
   public readonly loading = input(false);
   public readonly pending = input(false);
 
   protected readonly isDisabled = computed(() => this.disabled() || this.loading() || this.pending());
+
   protected readonly isLoading = computed(() => this.loading() || this.pending());
+
+  protected readonly isSecondary = computed(() => this.priority() === UiButtonPriority.Secondary);
 }

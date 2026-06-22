@@ -5,11 +5,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   MFE_AUTH_LOGIN_SUCCESS_EVENT,
   MFE_AUTH_LOGOUT_EVENT,
+  MFE_LANGUAGE_REQUEST_EVENT,
   SHELL_AUTH_TOKEN_EVENT,
   TODO_AUTH_TOKEN_REQUEST_EVENT,
 } from '../constants/mfe-events.constants';
 import { IAuthLoginSuccessEventDetail } from '../models/mfe-events.model';
 import { MfeEventBridgeService } from './mfe-event-bridge.service';
+import { ShellLanguageService } from './shell-language.service';
 import { ShellSessionService } from './shell-session.service';
 
 describe('MfeEventBridgeService', () => {
@@ -27,6 +29,10 @@ describe('MfeEventBridgeService', () => {
     setToken: vi.fn(),
     getToken: vi.fn(),
     clearToken: vi.fn(),
+  };
+
+  const shellLanguageServiceMock = {
+    dispatchCurrentLanguage: vi.fn(),
   };
 
   beforeEach(() => {
@@ -47,6 +53,10 @@ describe('MfeEventBridgeService', () => {
         {
           provide: ShellSessionService,
           useValue: shellSessionServiceMock,
+        },
+        {
+          provide: ShellLanguageService,
+          useValue: shellLanguageServiceMock,
         },
       ],
     });
@@ -132,5 +142,13 @@ describe('MfeEventBridgeService', () => {
     dispatchCapturedEvent(TODO_AUTH_TOKEN_REQUEST_EVENT, new CustomEvent(TODO_AUTH_TOKEN_REQUEST_EVENT));
 
     expect(dispatchEventSpy).not.toHaveBeenCalled();
+  });
+
+  it('should dispatch current language when language is requested', () => {
+    service.init();
+
+    dispatchCapturedEvent(MFE_LANGUAGE_REQUEST_EVENT, new CustomEvent(MFE_LANGUAGE_REQUEST_EVENT));
+
+    expect(shellLanguageServiceMock.dispatchCurrentLanguage).toHaveBeenCalled();
   });
 });

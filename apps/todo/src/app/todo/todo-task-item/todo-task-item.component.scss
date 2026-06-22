@@ -9,21 +9,23 @@
   &__summary {
     display: flex;
     align-items: center;
-    gap: var(--ui-spacing-sm);
     min-width: 0;
   }
 
   &__checkbox {
-    flex: 0 0 auto;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
   }
 
   &__name {
-    min-width: 0;
-    flex: 1;
+    display: inline-block;
+    max-width: 100%;
     overflow: hidden;
     color: var(--ui-color-primary);
     font-size: var(--ui-font-size-md);
     text-overflow: ellipsis;
+    vertical-align: middle;
     white-space: nowrap;
 
     &--completed {

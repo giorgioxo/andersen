@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterLink } from '@angular/router';
 import { NotificationService } from '@andersen/shared-ui';
+import { TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AUTH_LOGIN_SUCCESS_EVENT } from '../core/auth-events.constants';
-import { SignInComponent } from './sign-in.component';
 import { AuthApiService } from '../services/auth-api.service';
+import { AuthValidationMessagesService } from '../services/auth-validation-messages.service';
+import { SignInComponent } from './sign-in.component';
 
 describe('SignInComponent', () => {
   let fixture: ComponentFixture<SignInComponent>;
@@ -14,6 +15,19 @@ describe('SignInComponent', () => {
 
   const authApiServiceMock = {
     signIn: vi.fn(),
+  };
+
+  const notificationServiceMock = {
+    success: vi.fn(),
+    error: vi.fn(),
+  };
+
+  const translateServiceMock = {
+    instant: vi.fn((key: string) => key),
+  };
+
+  const authValidationMessagesServiceMock = {
+    messages: {},
   };
 
   beforeEach(async () => {
@@ -26,19 +40,24 @@ describe('SignInComponent', () => {
           provide: AuthApiService,
           useValue: authApiServiceMock,
         },
-
         {
           provide: NotificationService,
-          useValue: {
-            success: vi.fn(),
-            error: vi.fn(),
-          },
+          useValue: notificationServiceMock,
+        },
+        {
+          provide: TranslateService,
+          useValue: translateServiceMock,
+        },
+        {
+          provide: AuthValidationMessagesService,
+          useValue: authValidationMessagesServiceMock,
         },
       ],
     })
       .overrideComponent(SignInComponent, {
-        remove: {
-          imports: [RouterLink],
+        set: {
+          imports: [],
+          template: '',
         },
       })
       .compileComponents();

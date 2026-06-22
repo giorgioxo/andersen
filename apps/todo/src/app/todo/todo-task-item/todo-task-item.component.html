@@ -17,11 +17,11 @@
     </form>
   } @else {
     <div class="todo-task-item__summary">
-      <mat-checkbox class="todo-task-item__checkbox" [checked]="task().completed" [disabled]="isLoading()" (change)="onCompletedChange()" />
-
-      <span class="todo-task-item__name" [class.todo-task-item__name--completed]="task().completed">
-        {{ task().name }}
-      </span>
+      <mat-checkbox class="todo-task-item__checkbox" [checked]="task().completed" [disabled]="isLoading()" (change)="onCompletedChange()">
+        <span class="todo-task-item__name" [class.todo-task-item__name--completed]="task().completed">
+          {{ task().name }}
+        </span>
+      </mat-checkbox>
     </div>
 
     <div class="todo-task-item__actions">

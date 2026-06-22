@@ -8,7 +8,7 @@
 
   &__content {
     position: relative;
-    max-height: 520px;
+    max-height: var(--ui-table-max-height);
     overflow: auto;
     border: var(--ui-border-width-sm) solid var(--ui-color-border);
     border-radius: var(--ui-radius-md) var(--ui-radius-md) 0 0;
@@ -21,7 +21,7 @@
 
   table {
     width: 100%;
-    min-width: var(--ui--auth-talbe-width);
+    min-width: var(--ui-table-min-width);
   }
 
   &__loader {

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { SPINNER_DIAMETER, UiSpinnerSize } from './spinner.model';
 
 @Component({
@@ -11,6 +12,8 @@ import { SPINNER_DIAMETER, UiSpinnerSize } from './spinner.model';
 })
 export class UiSpinnerComponent {
   public readonly size = input<UiSpinnerSize>('medium');
+  public readonly ariaLabel = input<string | null>(null);
 
   protected readonly diameter = computed(() => SPINNER_DIAMETER[this.size()]);
+  protected readonly ariaHidden = computed(() => (this.ariaLabel() ? null : 'true'));
 }

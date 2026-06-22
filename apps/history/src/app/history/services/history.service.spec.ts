@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { NotificationService } from '@andersen/shared-ui';
+import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INITIAL_HISTORY_QUERY } from '../core/history.constants';
-import { HistoryEventType } from '../core/history.model';
+import { HistoryEventType, IHistoryQuery } from '../core/history.model';
 import { HistoryApiService } from './history-api.service';
 import { HistoryService } from './history.service';
 import { HistorySessionService } from './history-session.service';
@@ -33,6 +34,10 @@ describe('HistoryService', () => {
     error: vi.fn(),
   };
 
+  const translateServiceMock = {
+    instant: vi.fn((key: string) => key),
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
 
@@ -42,9 +47,22 @@ describe('HistoryService', () => {
     TestBed.configureTestingModule({
       providers: [
         HistoryService,
-        { provide: HistoryApiService, useValue: historyApiServiceMock },
-        { provide: HistorySessionService, useValue: historySessionServiceMock },
-        { provide: NotificationService, useValue: notificationServiceMock },
+        {
+          provide: HistoryApiService,
+          useValue: historyApiServiceMock,
+        },
+        {
+          provide: HistorySessionService,
+          useValue: historySessionServiceMock,
+        },
+        {
+          provide: NotificationService,
+          useValue: notificationServiceMock,
+        },
+        {
+          provide: TranslateService,
+          useValue: translateServiceMock,
+        },
       ],
     });
 
@@ -52,9 +70,14 @@ describe('HistoryService', () => {
   });
 
   it('should update query', () => {
-    service.updateQuery(INITIAL_HISTORY_QUERY);
+    const query: IHistoryQuery = {
+      ...INITIAL_HISTORY_QUERY,
+      page: 2,
+    };
 
-    expect(service.historyQuery()).toEqual(INITIAL_HISTORY_QUERY);
+    service.updateQuery(query);
+
+    expect(service.historyQuery()).toEqual(query);
   });
 
   it('should call history api with current query', () => {
@@ -66,7 +89,11 @@ describe('HistoryService', () => {
   it('should map history events after load', () => {
     service.loadHistory().subscribe();
 
-    expect(service.historyEvents()[0]).toEqual(expect.objectContaining({ additionalInfo: 'name: Work' }));
+    expect(service.historyEvents()[0]).toEqual(
+      expect.objectContaining({
+        additionalInfo: 'name: Work',
+      }),
+    );
   });
 
   it('should estimate total items after load', () => {
@@ -80,6 +107,6 @@ describe('HistoryService', () => {
 
     service.loadHistory().subscribe();
 
-    expect(notificationServiceMock.error).toHaveBeenCalledWith('Authentication token is missing');
+    expect(notificationServiceMock.error).toHaveBeenCalledWith('history.notifications.tokenMissing');
   });
 });

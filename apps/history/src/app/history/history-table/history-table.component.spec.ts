@@ -4,7 +4,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { INITIAL_HISTORY_QUERY } from '../core/history.constants';
+import { DEFAULT_HISTORY_SORT_DIRECTION, HISTORY_EVENT_OPTIONS, INITIAL_HISTORY_QUERY } from '../core/history.constants';
 import { HistoryEventType, IHistoryEvent } from '../core/history.model';
 import { HistoryTableComponent } from './history-table.component';
 
@@ -25,7 +25,13 @@ describe('HistoryTableComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HistoryTableComponent],
       providers: [provideNoopAnimations()],
-    }).compileComponents();
+    })
+      .overrideComponent(HistoryTableComponent, {
+        set: {
+          template: '<div #tableContent></div>',
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(HistoryTableComponent);
     component = fixture.componentInstance;
@@ -43,9 +49,23 @@ describe('HistoryTableComponent', () => {
   });
 
   it('should emit first page when filter changes', () => {
+    component['selectedEventTypes'] = [HistoryEventType.CreateTodo];
+
     component['applyEventTypeFilter']();
 
     expect(component['queryChange'].emit).toHaveBeenCalledWith(expect.objectContaining({ page: 1 }));
+  });
+
+  it('should emit selected event types when filter changes', () => {
+    component['selectedEventTypes'] = [HistoryEventType.CreateTodo];
+
+    component['applyEventTypeFilter']();
+
+    expect(component['queryChange'].emit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: [HistoryEventType.CreateTodo],
+      }),
+    );
   });
 
   it('should emit next page query when page changes', () => {
@@ -60,14 +80,31 @@ describe('HistoryTableComponent', () => {
     expect(component['queryChange'].emit).toHaveBeenCalledWith(expect.objectContaining({ limit: 10 }));
   });
 
+  it('should reset page when sort changes', () => {
+    component['onSortChange']({ active: 'createdAt', direction: 'asc' } as Sort);
+
+    expect(component['queryChange'].emit).toHaveBeenCalledWith(expect.objectContaining({ page: 1 }));
+  });
+
   it('should emit sort direction when sort changes', () => {
     component['onSortChange']({ active: 'createdAt', direction: 'asc' } as Sort);
 
     expect(component['queryChange'].emit).toHaveBeenCalledWith(expect.objectContaining({ sort: 'asc' }));
   });
 
+  it('should emit default sort direction when sort is cleared', () => {
+    component['onSortChange']({ active: 'createdAt', direction: '' } as Sort);
+
+    expect(component['queryChange'].emit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: DEFAULT_HISTORY_SORT_DIRECTION,
+      }),
+    );
+  });
+
   it('should not emit while loading', () => {
     fixture.componentRef.setInput('isLoading', true);
+    fixture.detectChanges();
 
     component['applyEventTypeFilter']();
 
@@ -78,7 +115,9 @@ describe('HistoryTableComponent', () => {
     expect(component['getRowIndex'](0)).toBe(1);
   });
 
-  it('should return event label', () => {
-    expect(component['getEventLabel'](events[0])).toBe('Todo List Created');
+  it('should return event translation key', () => {
+    const expectedTranslationKey = HISTORY_EVENT_OPTIONS.find(({ value }) => value === events[0].type)?.translationKey ?? events[0].type;
+
+    expect(component['getEventTranslationKey'](events[0])).toBe(expectedTranslationKey);
   });
 });

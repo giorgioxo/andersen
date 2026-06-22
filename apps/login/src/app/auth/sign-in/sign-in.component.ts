@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { NotificationService, UiButtonComponent, UiInputComponent, UiInputType } from '@andersen/shared-ui';
+import { NotificationService, UiButtonComponent, UiInputAutocomplete, UiInputComponent, UiInputType } from '@andersen/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { finalize } from 'rxjs';
@@ -32,6 +32,8 @@ export class SignInComponent {
   protected readonly isSignInPending = signal(false);
 
   protected readonly uiInputType = UiInputType;
+  protected readonly uiInputAutocomplete = UiInputAutocomplete;
+
   protected readonly validationMessages = this.validationMessagesService.messages;
 
   protected readonly signInForm = this.formBuilder.group({

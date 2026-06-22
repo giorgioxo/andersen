@@ -8,17 +8,16 @@
     justify-content: center;
 
     &--hidden {
-      visibility: hidden;
+      opacity: 0;
     }
   }
 
   &__spinner {
     position: absolute;
-    top: 0;
-    right: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
   }
 
   &--secondary {

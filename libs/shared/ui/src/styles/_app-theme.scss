@@ -1,0 +1,86 @@
+@use '@angular/material' as mat;
+@use './token';
+
+@mixin app-theme {
+  html {
+    height: 100%;
+
+    @include mat.theme(
+      (
+        color: (
+          primary: mat.$azure-palette,
+          tertiary: mat.$blue-palette,
+        ),
+        typography: Roboto,
+        density: 0,
+      )
+    );
+
+    @include mat.form-field-overrides(
+      (
+        outlined-container-shape: var(--ui-radius-md),
+      )
+    );
+
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--ui-color-spinner),
+      )
+    );
+  }
+
+  html,
+  .cdk-overlay-container {
+    --mat-select-trigger-text-font: Roboto, Arial, sans-serif;
+    --mat-form-field-container-text-font: Roboto, Arial, sans-serif;
+    --mat-table-header-headline-font: Roboto, Arial, sans-serif;
+    --mat-table-row-item-label-text-font: Roboto, Arial, sans-serif;
+    --mat-paginator-container-text-font: Roboto, Arial, sans-serif;
+    --mat-option-label-text-font: Roboto, Arial, sans-serif;
+    --mat-form-field-outlined-label-text-font: Roboto, Arial, sans-serif;
+    --mat-form-field-filled-label-text-font: Roboto, Arial, sans-serif;
+    --mat-table-background-color: var(--ui-color-white);
+    --mat-table-row-item-container-color: var(--ui-color-white);
+  }
+
+  .ui-notification-panel--success {
+    @include mat.snack-bar-overrides(
+      (
+        supporting-text-color: var(--ui-color-snackbar-success-content),
+        container-color: var(--ui-color-snackbar-success-background),
+      )
+    );
+  }
+
+  .ui-notification-panel--error {
+    @include mat.snack-bar-overrides(
+      (
+        supporting-text-color: var(--ui-color-snackbar-error-content),
+        container-color: var(--ui-color-snackbar-error-background),
+      )
+    );
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body,
+  button,
+  input,
+  textarea,
+  select {
+    font-family: Roboto, Arial, sans-serif;
+  }
+
+  body {
+    min-height: 100%;
+    margin: 0;
+    color-scheme: light;
+    background-color: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+    font: var(--mat-sys-body-medium);
+  }
+}

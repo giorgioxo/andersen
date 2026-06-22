@@ -1,3 +1,9 @@
-export type UiButtonPriority = 'primary' | 'secondary';
+export enum UiButtonPriority {
+  Primary = 'primary',
+  Secondary = 'secondary',
+}
+
 export type UiButtonType = 'button' | 'submit' | 'reset';
-export type UiButtonAppearance = 'filled' | 'outlined' | 'tonal' | 'elevated' | 'text';
+
+export const transformUiButtonPriority = (priority: string): UiButtonPriority =>
+  priority === UiButtonPriority.Secondary ? UiButtonPriority.Secondary : UiButtonPriority.Primary;

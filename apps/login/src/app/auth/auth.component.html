@@ -1,10 +1,10 @@
 <section class="auth">
-  <nav class="auth__navigation">
-    <a class="auth__nav-button" routerLink="/auth/sign-in" routerLinkActive="auth__nav-button--active">
+  <nav class="auth__navigation" [attr.aria-label]="'login.accessibility.authNavigation' | translate">
+    <a class="auth__nav-button" routerLink="/auth/sign-in" routerLinkActive="auth__nav-button--active" ariaCurrentWhenActive="page">
       {{ 'login.navigation.signIn' | translate }}
     </a>
 
-    <a class="auth__nav-button" routerLink="/auth/registration" routerLinkActive="auth__nav-button--active">
+    <a class="auth__nav-button" routerLink="/auth/registration" routerLinkActive="auth__nav-button--active" ariaCurrentWhenActive="page">
       {{ 'login.navigation.registration' | translate }}
     </a>
   </nav>
