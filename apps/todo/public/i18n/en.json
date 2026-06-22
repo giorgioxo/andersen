@@ -1,0 +1,42 @@
+{
+  "todo": {
+    "fields": {
+      "listTitle": "List Title",
+      "taskDescription": "Task Description"
+    },
+    "actions": {
+      "addList": "Add List",
+      "history": "History",
+      "logout": "Logout",
+      "addTask": "Add Task",
+      "deleteList": "Delete List",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "empty": "No lists found. Create your first Todo List above.",
+    "dialogs": {
+      "deleteListTitle": "Delete list",
+      "deleteListDescription": "Are you sure you want to delete this list?",
+      "deleteTaskTitle": "Delete task",
+      "deleteTaskDescription": "Are you sure you want to delete this task?",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "notifications": {
+      "tokenMissing": "Authentication token is missing",
+      "loadFailed": "Failed to load todos",
+      "todoAdded": "Todo added successfully",
+      "todoAddFailed": "Failed to add todo",
+      "todoDeleted": "Todo deleted successfully",
+      "todoDeleteFailed": "Failed to delete todo",
+      "taskAddFailed": "Failed to add task",
+      "taskDeleted": "Task deleted successfully",
+      "taskDeleteFailed": "Failed to delete task",
+      "taskNotFound": "Task was not found",
+      "taskUpdated": "Task updated successfully",
+      "taskUpdateFailed": "Failed to update task"
+    }
+  }
+}

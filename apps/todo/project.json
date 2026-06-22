@@ -16,8 +16,13 @@
         "inlineStyleLanguage": "scss",
         "assets": [
           {
-            "glob": "**/*",
+            "glob": "favicon.ico",
             "input": "apps/todo/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/todo/public/i18n",
+            "output": "i18n/todo"
           }
         ],
         "styles": ["apps/todo/src/styles.scss"]

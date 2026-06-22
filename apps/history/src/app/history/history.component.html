@@ -1,8 +1,10 @@
 <section class="history">
   <header class="history__header">
-    <h1 class="history__title">History</h1>
+    <h1 class="history__title">{{ 'history.title' | translate }}</h1>
 
-    <ui-button type="button" priority="secondary" routerLink="/dashboard">Dashboard</ui-button>
+    <ui-button type="button" priority="primary" routerLink="/dashboard">
+      {{ 'history.dashboard' | translate }}
+    </ui-button>
   </header>
 
   <app-history-table

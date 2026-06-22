@@ -17,6 +17,6 @@ export class UiButtonComponent {
   public readonly loading = input(false);
   public readonly pending = input(false);
 
-  protected readonly isDisabled = computed(() => this.disabled() || this.pending());
+  protected readonly isDisabled = computed(() => this.disabled() || this.loading() || this.pending());
   protected readonly isLoading = computed(() => this.loading() || this.pending());
 }

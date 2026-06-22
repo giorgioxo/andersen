@@ -7,14 +7,18 @@
 
   <mat-card-content class="todo-list-card__content">
     <form class="todo-list-card__task-form" [formGroup]="taskForm" #taskFormDirective="ngForm" (ngSubmit)="onAddTask(taskFormDirective)">
-      <ui-input label="Task Description" [type]="uiInputType.Text" [control]="controls.name" />
+      <ui-input [label]="'todo.fields.taskDescription' | translate" [type]="uiInputType.Text" [control]="controls.name" />
 
-      <ui-button type="submit" appearance="tonal" [disabled]="taskForm.invalid"> Add Task </ui-button>
+      <ui-button type="submit" appearance="tonal" [disabled]="taskForm.invalid">
+        {{ 'todo.actions.addTask' | translate }}
+      </ui-button>
     </form>
   </mat-card-content>
 
   <mat-card-actions class="todo-list-card__actions">
-    <ui-button priority="secondary" type="button" (click)="onDeleteTodo()"> Delete List </ui-button>
+    <ui-button priority="secondary" type="button" (click)="onDeleteTodo()">
+      {{ 'todo.actions.deleteList' | translate }}
+    </ui-button>
   </mat-card-actions>
 
   @if (todo().tasks.length) {

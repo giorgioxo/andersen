@@ -1,4 +1,15 @@
-export const AUTH_PASSWORD_ERROR_MESSAGES = {
-  passwordPolicy:
-    'Password must be at least 8 characters and contain at least two uppercase letters, one number, and one special character.',
+export const AUTH_VALIDATION_TRANSLATION_KEY = 'login.validation';
+
+export const AUTH_VALIDATION_ERROR_KEYS = {
+  required: 'required',
+  email: 'email',
+  minlength: 'minlength',
+  pattern: 'pattern',
+  passwordPolicy: 'passwordPolicy',
+  passwordMismatch: 'passwordMismatch',
+  invalid: 'invalid',
 } as const;
+
+export type AuthValidationErrorKey = keyof typeof AUTH_VALIDATION_ERROR_KEYS;
+
+export type AuthValidationMessages = Record<AuthValidationErrorKey, string>;

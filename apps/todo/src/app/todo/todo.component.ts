@@ -1,18 +1,19 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UiButtonComponent, UiDialogService, UiInputComponent, UiInputType } from '@andersen/shared-ui';
+import { RouterLink } from '@angular/router';
+import { UiButtonComponent, UiDialogData, UiDialogService, UiInputComponent, UiInputType } from '@andersen/shared-ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { filter, finalize, switchMap } from 'rxjs';
 
-import { DELETE_TASK_DIALOG_DATA, DELETE_TODO_DIALOG_DATA } from './core/todo.constants';
+import { DELETE_TASK_DIALOG_TRANSLATION_KEYS, DELETE_TODO_DIALOG_TRANSLATION_KEYS } from './core/todo.constants';
 import { TodoListCardComponent } from './todo-list-card/todo-list-card.component';
-import { TodoService } from './services/todo.service';
 import { TodoEventBridgeService } from './services/todo-event-bridge.service';
+import { TodoService } from './services/todo.service';
 
 @Component({
   selector: 'app-todo',
-  imports: [ReactiveFormsModule, UiInputComponent, UiButtonComponent, TodoListCardComponent, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, UiButtonComponent, UiInputComponent, TodoListCardComponent, TranslatePipe],
   templateUrl: './todo.component.html',
   styleUrl: './todo.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,10 +24,10 @@ export class TodoComponent implements OnInit {
   private readonly dialogService = inject(UiDialogService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly todoEventBridgeService = inject(TodoEventBridgeService);
+  private readonly translateService = inject(TranslateService);
 
   protected readonly isAddTodoPending = signal(false);
   protected readonly loadingTodoId = signal<string | null>(null);
-
   protected readonly todos = this.todoService.todos;
   protected readonly uiInputType = UiInputType;
 
@@ -55,10 +56,7 @@ export class TodoComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(() => {
-        todoFormDirective.resetForm({
-          name: '',
-        });
-
+        todoFormDirective.resetForm({ name: '' });
         this.todoForm.updateValueAndValidity();
       });
   }
@@ -69,7 +67,7 @@ export class TodoComponent implements OnInit {
     }
 
     this.dialogService
-      .open(DELETE_TODO_DIALOG_DATA)
+      .open(this.getDialogData(DELETE_TODO_DIALOG_TRANSLATION_KEYS))
       .pipe(
         filter(Boolean),
         switchMap(() => {
@@ -80,10 +78,7 @@ export class TodoComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(() => {
-        this.todoForm.reset({
-          name: '',
-        });
-
+        this.todoForm.reset({ name: '' });
         this.todoForm.updateValueAndValidity();
       });
   }
@@ -110,7 +105,7 @@ export class TodoComponent implements OnInit {
     }
 
     this.dialogService
-      .open(DELETE_TASK_DIALOG_DATA)
+      .open(this.getDialogData(DELETE_TASK_DIALOG_TRANSLATION_KEYS))
       .pipe(
         filter(Boolean),
         switchMap(() => {
@@ -157,5 +152,18 @@ export class TodoComponent implements OnInit {
 
   protected logout(): void {
     this.todoEventBridgeService.dispatchLogout();
+  }
+
+  private getDialogData(translationKeys: UiDialogData): UiDialogData {
+    return {
+      title: this.translate(translationKeys.title),
+      description: this.translate(translationKeys.description),
+      confirmText: this.translate(translationKeys.confirmText),
+      cancelText: this.translate(translationKeys.cancelText),
+    };
+  }
+
+  private translate(key: string): string {
+    return this.translateService.instant(key) as string;
   }
 }

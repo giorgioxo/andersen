@@ -1,16 +1,33 @@
 .history {
   display: flex;
   flex-direction: column;
-  gap: var(--ui-spacing-lg);
-  padding: var(--ui-spacing-lg);
+  min-height: 100vh;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ui-spacing-md);
+    padding: var(--ui-spacing-lg) var(--ui-spacing-xl);
+    border-bottom: var(--ui-border-width-sm) solid var(--ui-color-border);
+  }
 
   &__title {
     margin: 0;
     font-size: var(--ui-font-size-lg);
   }
 
-  &__header {
-    display: flex;
-    justify-content: space-between;
+  app-history-table {
+    display: block;
+    padding: var(--ui-spacing-lg) var(--ui-spacing-xl) 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .history {
+    &__header,
+    app-history-table {
+      padding-inline: var(--ui-spacing-md);
+    }
   }
 }

@@ -1,15 +1,13 @@
 .todo {
   display: block;
   min-height: 100vh;
-  padding: var(--ui-spacing-xm) var(--ui-spacing-xl);
-  margin-top: var(--ui-spacing-xm);
 
   &__toolbar {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--ui-spacing-md);
-    margin-bottom: var(--ui-spacing-lg);
+    padding: var(--ui-spacing-lg) var(--ui-spacing-xl) 0;
     border-bottom: var(--ui-border-width-sm) solid var(--ui-color-border);
   }
 
@@ -18,7 +16,6 @@
     align-items: flex-start;
     flex: 1;
     min-width: 0;
-    border-radius: var(--ui-radius-xm);
 
     ui-input {
       width: 100%;
@@ -35,17 +32,19 @@
     grid-template-columns: repeat(auto-fill, var(--ui-card-width-md));
     justify-content: center;
     gap: var(--ui-spacing-lg);
+    padding: var(--ui-spacing-lg) var(--ui-spacing-xl) 0;
   }
 
   &__empty {
-    margin-top: var(--ui-spacing-lg);
-    font-size: var(--ui-font-size-md);
+    margin: 0;
+    padding: var(--ui-spacing-lg) var(--ui-spacing-xl) 0;
     color: var(--ui-text-color-secondary);
+    font-size: var(--ui-font-size-md);
   }
 
   &__add-list {
-    margin-top: var(--ui-spacing-sm);
     width: var(--ui-button-size-md);
+    margin-top: var(--ui-spacing-sm);
   }
 
   &__actions {
@@ -58,16 +57,19 @@
 
 @media (max-width: 600px) {
   .todo {
-    padding-inline: var(--ui-spacing-md);
-
     &__toolbar {
       flex-direction: column;
       align-items: stretch;
+      padding-inline: var(--ui-spacing-md);
+    }
+
+    &__grid,
+    &__empty {
+      padding-inline: var(--ui-spacing-md);
     }
 
     &__actions {
       justify-content: flex-end;
-      margin-bottom: var(--ui-spacing-md);
     }
   }
 }

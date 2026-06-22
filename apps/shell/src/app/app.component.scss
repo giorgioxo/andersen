@@ -1,0 +1,16 @@
+.shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 100vh;
+
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--ui-spacing-md) var(--ui-spacing-xl) 0;
+    border-bottom: var(--ui-border-width-sm) solid var(--ui-color-border);
+  }
+
+  &__content {
+    min-height: 0;
+  }
+}

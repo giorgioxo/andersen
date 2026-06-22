@@ -1,1 +1,9 @@
-<router-outlet />
+<div class="shell">
+  <header class="shell__header">
+    <app-language-picker [selectedLanguage]="currentLanguage()" (languageSelected)="changeLanguage($event)" />
+  </header>
+
+  <main class="shell__content">
+    <router-outlet />
+  </main>
+</div>

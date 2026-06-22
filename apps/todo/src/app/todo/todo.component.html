@@ -3,14 +3,21 @@
 
   <div class="todo__toolbar">
     <form class="todo__header" [formGroup]="todoForm" #todoFormDirective="ngForm" (ngSubmit)="addTodo(todoFormDirective)">
-      <ui-input label="List Title" [type]="uiInputType.Text" [control]="controls.name" />
+      <ui-input [label]="'todo.fields.listTitle' | translate" [type]="uiInputType.Text" [control]="controls.name" />
 
-      <ui-button class="todo__add-list" type="submit" [disabled]="todoForm.invalid" [pending]="isAddTodoPending()"> Add List </ui-button>
+      <ui-button class="todo__add-list" type="submit" [disabled]="todoForm.invalid" [pending]="isAddTodoPending()">
+        {{ 'todo.actions.addList' | translate }}
+      </ui-button>
     </form>
 
     <div class="todo__actions">
-      <ui-button type="button" priority="secondary" routerLink="/history">History</ui-button>
-      <ui-button type="button" priority="secondary" (click)="logout()">Logout</ui-button>
+      <ui-button type="button" priority="secondary" routerLink="/history">
+        {{ 'todo.actions.history' | translate }}
+      </ui-button>
+
+      <ui-button type="button" priority="primary" (click)="logout()">
+        {{ 'todo.actions.logout' | translate }}
+      </ui-button>
     </div>
   </div>
 
@@ -29,6 +36,6 @@
       }
     </div>
   } @else {
-    <p class="todo__empty">No lists found. Create your first Todo List above.</p>
+    <p class="todo__empty">{{ 'todo.empty' | translate }}</p>
   }
 </section>

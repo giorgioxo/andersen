@@ -1,0 +1,33 @@
+{
+  "history": {
+    "title": "History",
+    "dashboard": "Dashboard",
+    "eventTypes": "Event Types",
+    "columns": {
+      "number": "No.",
+      "eventName": "Event Name",
+      "dateTime": "Date & Time",
+      "additionalInfo": "Additional Info"
+    },
+    "empty": "No history records found",
+    "events": {
+      "createTodo": "Todo List Created",
+      "deleteTodo": "Todo List Deleted",
+      "createTask": "Task Created",
+      "deleteTask": "Task Deleted",
+      "updateTask": "Task Status Updated"
+    },
+    "paginator": {
+      "itemsPerPage": "Items per page",
+      "nextPage": "Next page",
+      "previousPage": "Previous page",
+      "firstPage": "First page",
+      "lastPage": "Last page",
+      "range": "Showing {{start}}-{{end}} of {{total}} entries"
+    },
+    "notifications": {
+      "tokenMissing": "Authentication token is missing",
+      "loadFailed": "Failed to load history"
+    }
+  }
+}

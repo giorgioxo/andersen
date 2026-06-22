@@ -1,0 +1,44 @@
+{
+  "login": {
+    "fields": {
+      "login": "Логин",
+      "password": "Пароль",
+      "newPassword": "Новый пароль",
+      "repeatPassword": "Повторите пароль"
+    },
+    "validation": {
+      "required": "Это поле обязательно",
+      "email": "Введите корректный адрес электронной почты",
+      "minlength": "Значение должно содержать не менее 8 символов",
+      "pattern": "Разрешены только латинские буквы и цифры",
+      "passwordPolicy": "Пароль должен содержать не менее 8 символов, две заглавные буквы, одну цифру и один специальный символ.",
+      "passwordMismatch": "Пароли не совпадают",
+      "invalid": "Введено недопустимое значение"
+    },
+    "signIn": {
+      "title": "Вход",
+      "submit": "Войти",
+      "resetPassword": "Сбросить пароль"
+    },
+    "resetPassword": {
+      "title": "Восстановление пароля",
+      "submit": "Сбросить"
+    },
+    "registration": {
+      "title": "Регистрация",
+      "submit": "Зарегистрироваться"
+    },
+    "navigation": {
+      "signIn": "Войти",
+      "registration": "Регистрация"
+    },
+    "notifications": {
+      "signInSuccess": "Пользователь {{email}} успешно вошёл в систему",
+      "signInFailed": "Не удалось войти в систему",
+      "registrationSuccess": "Пользователь {{email}} успешно зарегистрирован",
+      "registrationFailed": "Не удалось зарегистрироваться",
+      "passwordResetSuccess": "Пароль для {{email}} успешно сброшен",
+      "passwordResetFailed": "Не удалось сбросить пароль"
+    }
+  }
+}

@@ -1,9 +1,9 @@
 .auth {
-  min-height: 100vh;
+  display: grid;
+  min-height: 100%;
+  grid-template-rows: auto 1fr;
 
-  &__header {
-    position: fixed;
-    top: 0;
+  &__navigation {
     display: flex;
     width: 100%;
     padding: var(--ui-spacing-md) var(--ui-spacing-lg);
@@ -15,6 +15,7 @@
     border: 0;
     padding: var(--ui-spacing-sm) var(--ui-spacing-md);
     background: transparent;
+    color: inherit;
     cursor: pointer;
     text-decoration: none;
 
@@ -25,8 +26,8 @@
 
   &__content {
     display: grid;
-    min-height: 100vh;
-    padding: var(--ui-spacing-xl) var(--ui-spacing-md) var(--ui-spacing-lg);
+    min-height: 0;
+    padding: var(--ui-spacing-lg) var(--ui-spacing-md);
     place-items: center;
   }
 
@@ -35,14 +36,5 @@
     padding: var(--ui-spacing-lg);
     border: var(--ui-border-width-sm) solid var(--ui-color-border);
     border-radius: var(--ui-radius-md);
-  }
-}
-
-@media (max-width: 440px) {
-  .auth {
-    &__panel {
-      width: 100%;
-      padding: var(--ui-spacing-md);
-    }
   }
 }

@@ -1,11 +1,25 @@
 import { Route } from '@angular/router';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AuthComponent } from './auth.component';
+import { AuthLanguageBridgeService } from './services/auth-language-bridge.service';
 
 export const authRoutes: Route[] = [
   {
     path: '',
     component: AuthComponent,
+    providers: [
+      provideTranslateService({
+        lang: 'en',
+        fallbackLang: 'en',
+        loader: provideTranslateHttpLoader({
+          prefix: '/i18n/login/',
+          suffix: '.json',
+        }),
+      }),
+      AuthLanguageBridgeService,
+    ],
     children: [
       {
         path: 'sign-in',

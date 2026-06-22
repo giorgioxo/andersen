@@ -1,29 +1,37 @@
 @let controls = editForm.controls;
 
 <div class="todo-task-item">
-  <mat-checkbox class="todo-task-item__checkbox" [checked]="task().completed" [disabled]="isLoading()" (change)="onCompletedChange()" />
+  @if (isEditing()) {
+    <form class="todo-task-item__edit-form" [formGroup]="editForm" (ngSubmit)="saveEdit()">
+      <ui-input [label]="'todo.fields.taskDescription' | translate" [type]="uiInputType.Text" [control]="controls.name" />
 
-  <div class="todo-task-item__body">
-    @if (isEditing()) {
-      <form class="todo-task-item__edit-form" [formGroup]="editForm" (ngSubmit)="saveEdit()">
-        <ui-input label="Task Description" [type]="uiInputType.Text" [control]="controls.name" />
+      <div class="todo-task-item__actions">
+        <ui-button type="submit" [disabled]="editForm.invalid">
+          {{ 'todo.actions.save' | translate }}
+        </ui-button>
 
-        <div class="todo-task-item__actions todo-task-item__actions-save">
-          <ui-button type="submit" appearance="filled" [disabled]="editForm.invalid"> Save </ui-button>
+        <ui-button type="button" priority="secondary" (click)="cancelEdit()">
+          {{ 'todo.actions.cancel' | translate }}
+        </ui-button>
+      </div>
+    </form>
+  } @else {
+    <div class="todo-task-item__summary">
+      <mat-checkbox class="todo-task-item__checkbox" [checked]="task().completed" [disabled]="isLoading()" (change)="onCompletedChange()" />
 
-          <ui-button type="button" appearance="outlined" (click)="cancelEdit()"> Cancel </ui-button>
-        </div>
-      </form>
-    } @else {
       <span class="todo-task-item__name" [class.todo-task-item__name--completed]="task().completed">
         {{ task().name }}
       </span>
+    </div>
 
-      <div class="todo-task-item__actions">
-        <ui-button type="button" appearance="tonal" [disabled]="isLoading()" (click)="startEdit()"> Edit </ui-button>
+    <div class="todo-task-item__actions">
+      <ui-button type="button" [disabled]="isLoading()" (click)="startEdit()">
+        {{ 'todo.actions.edit' | translate }}
+      </ui-button>
 
-        <ui-button type="button" appearance="text" [disabled]="isLoading()" (click)="onDeleteTask()"> Delete </ui-button>
-      </div>
-    }
-  </div>
+      <ui-button type="button" priority="secondary" [disabled]="isLoading()" (click)="onDeleteTask()">
+        {{ 'todo.actions.delete' | translate }}
+      </ui-button>
+    </div>
+  }
 </div>

@@ -1,20 +1,20 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { NotificationService } from '@andersen/shared-ui';
-import { catchError, EMPTY, Observable, tap } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { EMPTY, Observable, catchError, tap } from 'rxjs';
 
 import { ITodo } from '../core/todo.models';
 import { TodoApiService } from './todo-api.service';
 import { TodoHistoryTrackingService } from './todo-history-tracking.service';
 import { TodoSessionService } from './todo-session.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class TodoService {
   private readonly todoApiService = inject(TodoApiService);
   private readonly todoHistoryTrackingService = inject(TodoHistoryTrackingService);
   private readonly todoSessionService = inject(TodoSessionService);
   private readonly notificationService = inject(NotificationService);
+  private readonly translateService = inject(TranslateService);
 
   private readonly todoItems = signal<ITodo[]>([]);
 
@@ -28,10 +28,8 @@ export class TodoService {
     }
 
     return this.todoApiService.getTodos(token).pipe(
-      tap((todos) => {
-        this.todoItems.set(todos);
-      }),
-      catchError(() => this.handleError('Failed to load todos')),
+      tap((todos) => this.todoItems.set(todos)),
+      catchError(() => this.handleError('todo.notifications.loadFailed')),
     );
   }
 
@@ -46,9 +44,9 @@ export class TodoService {
       tap((todo) => {
         this.todoItems.update((todos) => [...todos, todo]);
         this.todoHistoryTrackingService.trackCreateTodo(todo.id, todo.name);
-        this.notificationService.success('Todo added successfully');
+        this.notificationService.success(this.translate('todo.notifications.todoAdded'));
       }),
-      catchError(() => this.handleError('Failed to add todo')),
+      catchError(() => this.handleError('todo.notifications.todoAddFailed')),
     );
   }
 
@@ -63,9 +61,9 @@ export class TodoService {
       tap(() => {
         this.todoItems.update((todos) => todos.filter(({ id }) => id !== todoId));
         this.todoHistoryTrackingService.trackDeleteTodo(todoId);
-        this.notificationService.success('Todo deleted successfully');
+        this.notificationService.success(this.translate('todo.notifications.todoDeleted'));
       }),
-      catchError(() => this.handleError('Failed to delete todo')),
+      catchError(() => this.handleError('todo.notifications.todoDeleteFailed')),
     );
   }
 
@@ -81,7 +79,7 @@ export class TodoService {
         this.updateTodoItem(updatedTodo);
         this.todoHistoryTrackingService.trackCreateTask(todoId, name);
       }),
-      catchError(() => this.handleError('Failed to add task')),
+      catchError(() => this.handleError('todo.notifications.taskAddFailed')),
     );
   }
 
@@ -96,9 +94,9 @@ export class TodoService {
       tap((updatedTodo) => {
         this.updateTodoItem(updatedTodo);
         this.todoHistoryTrackingService.trackDeleteTask(todoId, taskId);
-        this.notificationService.success('Task deleted successfully');
+        this.notificationService.success(this.translate('todo.notifications.taskDeleted'));
       }),
-      catchError(() => this.handleError('Failed to delete task')),
+      catchError(() => this.handleError('todo.notifications.taskDeleteFailed')),
     );
   }
 
@@ -106,7 +104,7 @@ export class TodoService {
     const task = this.findTask(todoId, taskId);
 
     if (!task) {
-      this.notificationService.error('Task was not found');
+      this.notificationService.error(this.translate('todo.notifications.taskNotFound'));
       return EMPTY;
     }
 
@@ -120,7 +118,7 @@ export class TodoService {
     const task = this.findTask(todoId, taskId);
 
     if (!task) {
-      this.notificationService.error('Task was not found');
+      this.notificationService.error(this.translate('todo.notifications.taskNotFound'));
       return EMPTY;
     }
 
@@ -129,7 +127,7 @@ export class TodoService {
       completed: task.completed,
     }).pipe(
       tap(() => {
-        this.notificationService.success('Task updated successfully');
+        this.notificationService.success(this.translate('todo.notifications.taskUpdated'));
       }),
     );
   }
@@ -146,7 +144,7 @@ export class TodoService {
         this.updateTodoItem(updatedTodo);
         this.todoHistoryTrackingService.trackUpdateTask(todoId, taskId, payload.name, payload.completed);
       }),
-      catchError(() => this.handleError('Failed to update task')),
+      catchError(() => this.handleError('todo.notifications.taskUpdateFailed')),
     );
   }
 
@@ -155,25 +153,28 @@ export class TodoService {
   }
 
   private findTask(todoId: string, taskId: string): ITodo['tasks'][number] | undefined {
-    const todo = this.todoItems().find(({ id }) => id === todoId);
-
-    return todo?.tasks.find(({ id }) => id === taskId);
+    return this.todoItems()
+      .find(({ id }) => id === todoId)
+      ?.tasks.find(({ id }) => id === taskId);
   }
 
   private getToken(): string | null {
     const token = this.todoSessionService.getToken();
 
     if (!token) {
-      this.notificationService.error('Authentication token is missing');
+      this.notificationService.error(this.translate('todo.notifications.tokenMissing'));
       return null;
     }
 
     return token;
   }
 
-  private handleError(message: string): Observable<never> {
-    this.notificationService.error(message);
-
+  private handleError(translationKey: string): Observable<never> {
+    this.notificationService.error(this.translate(translationKey));
     return EMPTY;
+  }
+
+  private translate(key: string): string {
+    return this.translateService.instant(key) as string;
   }
 }

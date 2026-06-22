@@ -1,0 +1,33 @@
+{
+  "history": {
+    "title": "ისტორია",
+    "dashboard": "დავალებების დაფა",
+    "eventTypes": "მოვლენის ტიპები",
+    "columns": {
+      "number": "№",
+      "eventName": "მოვლენის სახელი",
+      "dateTime": "თარიღი და დრო",
+      "additionalInfo": "დამატებითი ინფორმაცია"
+    },
+    "empty": "ისტორიის ჩანაწერები ვერ მოიძებნა",
+    "events": {
+      "createTodo": "სია შეიქმნა",
+      "deleteTodo": "სია წაიშალა",
+      "createTask": "დავალება შეიქმნა",
+      "deleteTask": "დავალება წაიშალა",
+      "updateTask": "დავალების სტატუსი განახლდა"
+    },
+    "paginator": {
+      "itemsPerPage": "ჩანაწერები გვერდზე",
+      "nextPage": "შემდეგი გვერდი",
+      "previousPage": "წინა გვერდი",
+      "firstPage": "პირველი გვერდი",
+      "lastPage": "ბოლო გვერდი",
+      "range": "ნაჩვენებია {{start}}-{{end}}, სულ {{total}} ჩანაწერი"
+    },
+    "notifications": {
+      "tokenMissing": "ავტორიზაციის token არ არსებობს",
+      "loadFailed": "ისტორიის ჩატვირთვა ვერ მოხერხდა"
+    }
+  }
+}

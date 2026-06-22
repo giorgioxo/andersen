@@ -1,32 +1,29 @@
 import { HistoryEventType, HistorySortDirection, IHistoryQuery } from './history.model';
 
-export const HISTORY_EVENT_OPTIONS: Array<{
-  value: HistoryEventType;
-  label: string;
-}> = [
+export const HISTORY_EVENT_OPTIONS = [
   {
     value: HistoryEventType.CreateTodo,
-    label: 'Todo List Created',
+    translationKey: 'history.events.createTodo',
   },
   {
     value: HistoryEventType.DeleteTodo,
-    label: 'Todo List Deleted',
+    translationKey: 'history.events.deleteTodo',
   },
   {
     value: HistoryEventType.CreateTask,
-    label: 'Task Created',
+    translationKey: 'history.events.createTask',
   },
   {
     value: HistoryEventType.DeleteTask,
-    label: 'Task Deleted',
+    translationKey: 'history.events.deleteTask',
   },
   {
     value: HistoryEventType.UpdateTask,
-    label: 'Task Status Updated',
+    translationKey: 'history.events.updateTask',
   },
-];
+] as const;
 
-export const HISTORY_EVENT_TYPES = HISTORY_EVENT_OPTIONS.map(({ value }) => value);
+export const HISTORY_EVENT_TYPES: HistoryEventType[] = HISTORY_EVENT_OPTIONS.map(({ value }) => value);
 
 export const DEFAULT_HISTORY_SORT_DIRECTION: HistorySortDirection = 'desc';
 

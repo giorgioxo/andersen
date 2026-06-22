@@ -1,24 +1,23 @@
 import { inject, Injectable } from '@angular/core';
-import { catchError, EMPTY } from 'rxjs';
+import { catchError, EMPTY, tap } from 'rxjs';
 
+import { HISTORY_UPDATED_EVENT } from '../core/todo-events.constants';
 import { ITodoHistoryTrackingPayload, TodoHistoryEventType } from '../core/todo-history-tracking.model';
-import { TodoSessionService } from './todo-session.service';
 import { TodoHistoryTrackingApiService } from './todo-history-tracking-api.service';
+import { TodoSessionService } from './todo-session.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoHistoryTrackingService {
   private readonly todoSessionService = inject(TodoSessionService);
-  private readonly todoHistoryTrackingApiService = inject(TodoHistoryTrackingApiService);
+  private readonly apiService = inject(TodoHistoryTrackingApiService);
 
   public trackCreateTodo(todoId: string, name: string): void {
     this.track(todoId, {
       event: TodoHistoryEventType.CreateTodo,
       todo_id: todoId,
-      data: {
-        name,
-      },
+      data: { name },
     });
   }
 
@@ -26,19 +25,15 @@ export class TodoHistoryTrackingService {
     this.track(todoId, {
       event: TodoHistoryEventType.DeleteTodo,
       todo_id: todoId,
-      data: {
-        todoId,
-      },
+      data: { todoId },
     });
   }
 
-  public trackCreateTask(todoId: string, taskName: string): void {
+  public trackCreateTask(todoId: string, name: string): void {
     this.track(todoId, {
       event: TodoHistoryEventType.CreateTask,
       todo_id: todoId,
-      data: {
-        name: taskName,
-      },
+      data: { name },
     });
   }
 
@@ -46,9 +41,7 @@ export class TodoHistoryTrackingService {
     this.track(todoId, {
       event: TodoHistoryEventType.DeleteTask,
       todo_id: todoId,
-      data: {
-        taskId,
-      },
+      data: { taskId },
     });
   }
 
@@ -56,11 +49,7 @@ export class TodoHistoryTrackingService {
     this.track(todoId, {
       event: TodoHistoryEventType.UpdateTask,
       todo_id: todoId,
-      data: {
-        taskId,
-        name,
-        completed,
-      },
+      data: { taskId, name, completed },
     });
   }
 
@@ -71,9 +60,14 @@ export class TodoHistoryTrackingService {
       return;
     }
 
-    this.todoHistoryTrackingApiService
+    this.apiService
       .track(token, todoId, payload)
-      .pipe(catchError(() => EMPTY))
+      .pipe(
+        tap(() => {
+          window.dispatchEvent(new CustomEvent(HISTORY_UPDATED_EVENT));
+        }),
+        catchError(() => EMPTY),
+      )
       .subscribe();
   }
 }
