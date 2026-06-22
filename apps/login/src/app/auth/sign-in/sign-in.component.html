@@ -1,13 +1,14 @@
 @let controls = signInForm.controls;
 
-<form class="sign-in" [formGroup]="signInForm" (ngSubmit)="submitSignIn()">
-  <h1 class="sign-in__title">
+<form class="sign-in" [formGroup]="signInForm" aria-labelledby="sign-in-title" (ngSubmit)="submitSignIn()">
+  <h1 id="sign-in-title" class="sign-in__title">
     {{ 'login.signIn.title' | translate }}
   </h1>
 
   <ui-input
     [label]="'login.fields.login' | translate"
     [type]="uiInputType.Text"
+    [autocomplete]="uiInputAutocomplete.Email"
     [control]="controls.username"
     [errorMessages]="validationMessages()"
   />
@@ -15,15 +16,18 @@
   <ui-input
     [label]="'login.fields.password' | translate"
     [type]="uiInputType.Password"
+    [autocomplete]="uiInputAutocomplete.CurrentPassword"
     [control]="controls.password"
     [errorMessages]="validationMessages()"
+    [showPasswordLabel]="'login.accessibility.showPassword' | translate"
+    [hidePasswordLabel]="'login.accessibility.hidePassword' | translate"
   />
 
   <ui-button type="submit" [loading]="isSignInPending()" [disabled]="signInForm.invalid">
     {{ 'login.signIn.submit' | translate }}
   </ui-button>
 
-  <button type="button" class="sign-in__link" routerLink="/auth/reset-password">
+  <a class="sign-in__link" routerLink="/auth/reset-password">
     {{ 'login.signIn.resetPassword' | translate }}
-  </button>
+  </a>
 </form>

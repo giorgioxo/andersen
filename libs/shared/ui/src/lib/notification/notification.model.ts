@@ -1,4 +1,7 @@
-export type NotificationStatus = 'success' | 'error';
+export enum NotificationStatus {
+  Success = 'success',
+  Error = 'error',
+}
 
 export interface NotificationData {
   message: string;

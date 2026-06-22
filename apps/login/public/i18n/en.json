@@ -6,7 +6,6 @@
       "newPassword": "New Password",
       "repeatPassword": "Repeat Password"
     },
-
     "signIn": {
       "title": "Sign In",
       "submit": "Sign In",
@@ -24,6 +23,11 @@
       "signIn": "Login",
       "registration": "Register"
     },
+    "accessibility": {
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "authNavigation": "Authentication navigation"
+    },
     "notifications": {
       "signInSuccess": "{{email}} signed in successfully",
       "signInFailed": "Sign in failed",
@@ -37,7 +41,7 @@
       "email": "Enter a valid email address",
       "minlength": "Must contain at least 8 characters",
       "pattern": "Only Latin letters and numbers are allowed",
-      "passwordPolicy": "Password must be at least 8 characters and contain at least two uppercase letters, one number, and one special character.",
+      "passwordPolicy": "Use 8+ characters: 2 uppercase letters, a number, and a symbol.",
       "passwordMismatch": "Passwords do not match",
       "invalid": "The entered value is invalid"
     }

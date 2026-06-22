@@ -27,16 +27,29 @@ describe('HistoryComponent', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
+
     historyServiceMock.loadHistory.mockReturnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [HistoryComponent],
       providers: [
         provideRouter([]),
-        { provide: HistoryService, useValue: historyServiceMock },
-        { provide: HistoryEventBridgeService, useValue: historyEventBridgeServiceMock },
+        {
+          provide: HistoryService,
+          useValue: historyServiceMock,
+        },
+        {
+          provide: HistoryEventBridgeService,
+          useValue: historyEventBridgeServiceMock,
+        },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(HistoryComponent, {
+        set: {
+          template: '',
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(HistoryComponent);
     component = fixture.componentInstance;

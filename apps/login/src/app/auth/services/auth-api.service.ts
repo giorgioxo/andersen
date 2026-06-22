@@ -15,7 +15,7 @@ const BASE_API_URL = environment.authApiBaseUrl;
   providedIn: 'root',
 })
 export class AuthApiService {
-  private http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
   public register({ username, password }: IRegistrationPayload): Observable<IAuthApiResponse> {
     return this.http.post<IAuthApiResponse>(`${BASE_API_URL}/sign-up`, {

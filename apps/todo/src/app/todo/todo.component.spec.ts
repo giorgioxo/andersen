@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroupDirective } from '@angular/forms';
-import { provideRouter } from '@angular/router';
 import { UiDialogService } from '@andersen/shared-ui';
+import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -32,6 +32,10 @@ describe('TodoComponent', () => {
     open: vi.fn(),
   };
 
+  const translateServiceMock = {
+    instant: vi.fn((key: string) => key),
+  };
+
   const formGroupDirectiveMock = {
     resetForm: vi.fn(),
   } as unknown as FormGroupDirective;
@@ -50,12 +54,31 @@ describe('TodoComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TodoComponent],
       providers: [
-        provideRouter([]),
-        { provide: TodoService, useValue: todoServiceMock },
-        { provide: TodoEventBridgeService, useValue: todoEventBridgeServiceMock },
-        { provide: UiDialogService, useValue: dialogServiceMock },
+        {
+          provide: TodoService,
+          useValue: todoServiceMock,
+        },
+        {
+          provide: TodoEventBridgeService,
+          useValue: todoEventBridgeServiceMock,
+        },
+        {
+          provide: UiDialogService,
+          useValue: dialogServiceMock,
+        },
+        {
+          provide: TranslateService,
+          useValue: translateServiceMock,
+        },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(TodoComponent, {
+        set: {
+          imports: [],
+          template: '',
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(TodoComponent);
     component = fixture.componentInstance;
@@ -80,6 +103,15 @@ describe('TodoComponent', () => {
     expect(todoServiceMock.addTodo).toHaveBeenCalledWith('Work');
   });
 
+  it('should not add todo while pending', () => {
+    component['isAddTodoPending'].set(true);
+    component['todoForm'].setValue({ name: 'Work' });
+
+    component['addTodo'](formGroupDirectiveMock);
+
+    expect(todoServiceMock.addTodo).not.toHaveBeenCalled();
+  });
+
   it('should delete todo when dialog is confirmed', () => {
     component['deleteTodo']('todo-123');
 
@@ -94,6 +126,14 @@ describe('TodoComponent', () => {
     expect(todoServiceMock.deleteTodo).not.toHaveBeenCalled();
   });
 
+  it('should not open delete todo dialog while todo is loading', () => {
+    component['loadingTodoId'].set('todo-123');
+
+    component['deleteTodo']('todo-123');
+
+    expect(dialogServiceMock.open).not.toHaveBeenCalled();
+  });
+
   it('should add task with trimmed name', () => {
     component['addTask']({ todoId: 'todo-123', name: ' Task 1 ' });
 
@@ -106,6 +146,28 @@ describe('TodoComponent', () => {
     component['addTask']({ todoId: 'todo-123', name: 'Task 1' });
 
     expect(todoServiceMock.addTask).not.toHaveBeenCalled();
+  });
+
+  it('should delete task when dialog is confirmed', () => {
+    component['deleteTask']({ todoId: 'todo-123', taskId: 'task-123' });
+
+    expect(todoServiceMock.deleteTask).toHaveBeenCalledWith('todo-123', 'task-123');
+  });
+
+  it('should toggle task completed', () => {
+    component['toggleTaskCompleted']({ todoId: 'todo-123', taskId: 'task-123' });
+
+    expect(todoServiceMock.toggleTaskCompleted).toHaveBeenCalledWith('todo-123', 'task-123');
+  });
+
+  it('should update task with trimmed name', () => {
+    component['updateTask']({
+      todoId: 'todo-123',
+      taskId: 'task-123',
+      name: ' Updated task ',
+    });
+
+    expect(todoServiceMock.updateTaskName).toHaveBeenCalledWith('todo-123', 'task-123', 'Updated task');
   });
 
   it('should dispatch logout event', () => {

@@ -15,6 +15,9 @@
       "edit": "Edit",
       "delete": "Delete"
     },
+    "accessibility": {
+      "loadingList": "Updating todo list"
+    },
     "empty": "No lists found. Create your first Todo List above.",
     "dialogs": {
       "deleteListTitle": "Delete list",

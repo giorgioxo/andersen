@@ -30,12 +30,21 @@ describe('TodoListCardComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [TodoListCardComponent],
-    }).compileComponents();
+    })
+      .overrideComponent(TodoListCardComponent, {
+        set: {
+          imports: [],
+          template: '',
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(TodoListCardComponent);
     component = fixture.componentInstance;
 
     fixture.componentRef.setInput('todo', todo);
+    fixture.componentRef.setInput('isLoading', false);
+
     fixture.detectChanges();
   });
 
@@ -62,12 +71,38 @@ describe('TodoListCardComponent', () => {
     expect(emitSpy).not.toHaveBeenCalled();
   });
 
+  it('should not emit add task payload while loading', () => {
+    const emitSpy = vi.spyOn(component.addTask, 'emit');
+
+    fixture.componentRef.setInput('isLoading', true);
+    fixture.detectChanges();
+
+    component['taskForm'].setValue({
+      name: 'Task 1',
+    });
+
+    component['onAddTask'](formGroupDirectiveMock);
+
+    expect(emitSpy).not.toHaveBeenCalled();
+  });
+
   it('should emit delete todo id', () => {
     const emitSpy = vi.spyOn(component.deleteTodo, 'emit');
 
     component['onDeleteTodo']();
 
     expect(emitSpy).toHaveBeenCalledWith('todo-123');
+  });
+
+  it('should not emit delete todo id while loading', () => {
+    const emitSpy = vi.spyOn(component.deleteTodo, 'emit');
+
+    fixture.componentRef.setInput('isLoading', true);
+    fixture.detectChanges();
+
+    component['onDeleteTodo']();
+
+    expect(emitSpy).not.toHaveBeenCalled();
   });
 
   it('should emit delete task payload', () => {
@@ -81,14 +116,29 @@ describe('TodoListCardComponent', () => {
     });
   });
 
-  it('should not emit delete todo id while loading', () => {
-    const emitSpy = vi.spyOn(component.deleteTodo, 'emit');
+  it('should emit toggle task completed payload', () => {
+    const emitSpy = vi.spyOn(component.toggleTaskCompleted, 'emit');
 
-    fixture.componentRef.setInput('isLoading', true);
-    fixture.detectChanges();
+    component['onToggleTaskCompleted']('task-123');
 
-    component['onDeleteTodo']();
+    expect(emitSpy).toHaveBeenCalledWith({
+      todoId: 'todo-123',
+      taskId: 'task-123',
+    });
+  });
 
-    expect(emitSpy).not.toHaveBeenCalled();
+  it('should emit update task payload', () => {
+    const emitSpy = vi.spyOn(component.updateTask, 'emit');
+
+    component['onUpdateTask']({
+      taskId: 'task-123',
+      name: 'Updated task',
+    });
+
+    expect(emitSpy).toHaveBeenCalledWith({
+      todoId: 'todo-123',
+      taskId: 'task-123',
+      name: 'Updated task',
+    });
   });
 });

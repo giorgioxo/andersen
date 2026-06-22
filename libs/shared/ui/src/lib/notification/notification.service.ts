@@ -11,11 +11,11 @@ export class NotificationService {
   private readonly notificationBar = inject(MatSnackBar);
 
   public success(message: string): void {
-    this.open(message, 'success');
+    this.open(message, NotificationStatus.Success);
   }
 
   public error(message: string): void {
-    this.open(message, 'error');
+    this.open(message, NotificationStatus.Error);
   }
 
   private open(message: string, status: NotificationStatus): void {

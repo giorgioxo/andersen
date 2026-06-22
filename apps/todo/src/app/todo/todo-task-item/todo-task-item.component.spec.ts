@@ -15,14 +15,25 @@ describe('TodoTaskItemComponent', () => {
   };
 
   beforeEach(async () => {
+    vi.clearAllMocks();
+
     await TestBed.configureTestingModule({
       imports: [TodoTaskItemComponent],
-    }).compileComponents();
+    })
+      .overrideComponent(TodoTaskItemComponent, {
+        set: {
+          imports: [],
+          template: '',
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(TodoTaskItemComponent);
     component = fixture.componentInstance;
 
     fixture.componentRef.setInput('task', task);
+    fixture.componentRef.setInput('isLoading', false);
+
     fixture.detectChanges();
   });
 
@@ -48,6 +59,12 @@ describe('TodoTaskItemComponent', () => {
     expect(component['isEditing']()).toBe(true);
   });
 
+  it('should set task name when edit starts', () => {
+    component['startEdit']();
+
+    expect(component['editForm'].getRawValue().name).toBe('Task 1');
+  });
+
   it('should emit update task payload', () => {
     const emitSpy = vi.spyOn(component.updateTask, 'emit');
 
@@ -71,6 +88,18 @@ describe('TodoTaskItemComponent', () => {
     expect(emitSpy).not.toHaveBeenCalled();
   });
 
+  it('should disable edit mode after saving', () => {
+    component['startEdit']();
+
+    component['editForm'].setValue({
+      name: 'Updated task',
+    });
+
+    component['saveEdit']();
+
+    expect(component['isEditing']()).toBe(false);
+  });
+
   it('should not emit delete task id while loading', () => {
     const emitSpy = vi.spyOn(component.deleteTask, 'emit');
 
@@ -80,5 +109,14 @@ describe('TodoTaskItemComponent', () => {
     component['onDeleteTask']();
 
     expect(emitSpy).not.toHaveBeenCalled();
+  });
+
+  it('should not enable edit mode while loading', () => {
+    fixture.componentRef.setInput('isLoading', true);
+    fixture.detectChanges();
+
+    component['startEdit']();
+
+    expect(component['isEditing']()).toBe(false);
   });
 });

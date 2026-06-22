@@ -15,10 +15,4 @@ export const mapAuthResponse = (resp: HttpResponse<IAuthApiResponse>): IAuthResu
   };
 };
 
-export const getAuthErrorMessage = (httpError: HttpErrorResponse): string => {
-  const responseBody = httpError.error as { error: string };
-
-  return responseBody.error;
-};
-
 export const normalizeAuthEmail = (value: string): string => value.trim().toLowerCase();

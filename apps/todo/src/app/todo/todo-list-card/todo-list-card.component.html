@@ -1,22 +1,24 @@
 @let controls = taskForm.controls;
 
-<mat-card class="todo-list-card" [class.todo-list-card--loading]="isLoading()">
+<mat-card class="todo-list-card" [class.todo-list-card--loading]="isLoading()" [attr.aria-busy]="isLoading()">
   <mat-card-header class="todo-list-card__header">
-    <mat-card-title class="todo-list-card__title">{{ todo().name }}</mat-card-title>
+    <mat-card-title class="todo-list-card__title">
+      {{ todo().name }}
+    </mat-card-title>
   </mat-card-header>
 
   <mat-card-content class="todo-list-card__content">
     <form class="todo-list-card__task-form" [formGroup]="taskForm" #taskFormDirective="ngForm" (ngSubmit)="onAddTask(taskFormDirective)">
       <ui-input [label]="'todo.fields.taskDescription' | translate" [type]="uiInputType.Text" [control]="controls.name" />
 
-      <ui-button type="submit" appearance="tonal" [disabled]="taskForm.invalid">
+      <ui-button type="submit" [disabled]="taskForm.invalid || isLoading()">
         {{ 'todo.actions.addTask' | translate }}
       </ui-button>
     </form>
   </mat-card-content>
 
   <mat-card-actions class="todo-list-card__actions">
-    <ui-button priority="secondary" type="button" (click)="onDeleteTodo()">
+    <ui-button type="button" priority="secondary" [disabled]="isLoading()" (click)="onDeleteTodo()">
       {{ 'todo.actions.deleteList' | translate }}
     </ui-button>
   </mat-card-actions>
@@ -37,7 +39,7 @@
 
   @if (isLoading()) {
     <div class="todo-list-card__loader">
-      <ui-spinner size="small" />
+      <ui-spinner size="small" [ariaLabel]="'todo.accessibility.loadingList' | translate" />
     </div>
   }
 </mat-card>

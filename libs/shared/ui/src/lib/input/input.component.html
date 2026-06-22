@@ -2,7 +2,14 @@
   <mat-form-field class="ui-input__field" appearance="outline">
     <mat-label>{{ label() }}</mat-label>
 
-    <input #inputElement matInput [type]="inputType()" [formControl]="control()" />
+    <input
+      #inputElement
+      matInput
+      [type]="inputType()"
+      [formControl]="control()"
+      [required]="isRequired()"
+      [autocomplete]="autocomplete()"
+    />
 
     @if (isPasswordInput()) {
       <button
@@ -14,12 +21,14 @@
         [attr.aria-pressed]="!isPasswordHidden()"
         (click)="togglePasswordVisibility($event)"
       >
-        <mat-icon>{{ passwordToggleIcon() }}</mat-icon>
+        <mat-icon aria-hidden="true">
+          {{ passwordToggleIcon() }}
+        </mat-icon>
       </button>
     }
-  </mat-form-field>
 
-  @if (getErrorMessage(); as message) {
-    <p class="ui-input__error">{{ message }}</p>
-  }
+    @if (getErrorMessage(); as message) {
+      <mat-error>{{ message }}</mat-error>
+    }
+  </mat-form-field>
 </div>

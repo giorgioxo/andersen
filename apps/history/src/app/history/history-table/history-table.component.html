@@ -1,5 +1,5 @@
 <div class="history-table">
-  <mat-form-field class="history-table__filter">
+  <mat-form-field class="history-table__filter" appearance="outline">
     <mat-label>{{ 'history.eventTypes' | translate }}</mat-label>
 
     <mat-select [(ngModel)]="selectedEventTypes" multiple [disabled]="isLoading()" (selectionChange)="applyEventTypeFilter()">
@@ -11,25 +11,31 @@
     </mat-select>
   </mat-form-field>
 
-  <div class="history-table__content" #tableContent [class.history-table__content--loading]="isLoading()">
+  <div #tableContent class="history-table__content" [class.history-table__content--loading]="isLoading()" [attr.aria-busy]="isLoading()">
     <table
       mat-table
-      [dataSource]="events()"
       matSort
       matSortDisableClear
       matSortActive="createdAt"
+      [dataSource]="events()"
       [matSortDirection]="query().sort"
       (matSortChange)="onSortChange($event)"
     >
       <ng-container matColumnDef="index">
-        <th mat-header-cell *matHeaderCellDef>{{ 'history.columns.number' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'history.columns.number' | translate }}
+        </th>
+
         <td mat-cell *matCellDef="let event; let rowIndex = index">
           {{ getRowIndex(rowIndex) }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="eventName">
-        <th mat-header-cell *matHeaderCellDef>{{ 'history.columns.eventName' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'history.columns.eventName' | translate }}
+        </th>
+
         <td mat-cell *matCellDef="let event">
           {{ getEventTranslationKey(event) | translate }}
         </td>
@@ -39,14 +45,20 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="isLoading()">
           {{ 'history.columns.dateTime' | translate }}
         </th>
+
         <td mat-cell *matCellDef="let event">
           {{ event.createdAt | date: 'MM/dd/yyyy HH:mm:ss' }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="additionalInfo">
-        <th mat-header-cell *matHeaderCellDef>{{ 'history.columns.additionalInfo' | translate }}</th>
-        <td mat-cell *matCellDef="let event">{{ event.additionalInfo }}</td>
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'history.columns.additionalInfo' | translate }}
+        </th>
+
+        <td mat-cell *matCellDef="let event">
+          {{ event.additionalInfo }}
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -61,7 +73,7 @@
 
     @if (isLoading()) {
       <div class="history-table__loader">
-        <ui-spinner size="small" />
+        <ui-spinner size="small" [ariaLabel]="'history.loading' | translate" />
       </div>
     }
   </div>
@@ -70,9 +82,10 @@
     [length]="totalItems()"
     [pageSize]="query().limit"
     [pageIndex]="query().page - 1"
+    [disabled]="isLoading()"
+    [attr.aria-label]="'history.paginator.label' | translate"
     hidePageSize
     showFirstLastButtons
-    [disabled]="isLoading()"
     (page)="onPageChange($event)"
   />
 </div>

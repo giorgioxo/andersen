@@ -1,3 +1,3 @@
-<div class="ui-spinner">
-  <mat-spinner [diameter]="diameter()" />
+<div class="ui-spinner" [attr.aria-hidden]="ariaHidden()">
+  <mat-spinner [diameter]="diameter()" [attr.aria-label]="ariaLabel()" />
 </div>

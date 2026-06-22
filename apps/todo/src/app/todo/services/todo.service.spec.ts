@@ -1,10 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { NotificationService } from '@andersen/shared-ui';
+import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ITodo } from '../core/todo.models';
 import { TodoApiService } from './todo-api.service';
+import { TodoHistoryTrackingService } from './todo-history-tracking.service';
 import { TodoService } from './todo.service';
 import { TodoSessionService } from './todo-session.service';
 
@@ -20,6 +22,14 @@ describe('TodoService', () => {
     deleteTask: vi.fn(),
   };
 
+  const todoHistoryTrackingServiceMock = {
+    trackCreateTodo: vi.fn(),
+    trackDeleteTodo: vi.fn(),
+    trackCreateTask: vi.fn(),
+    trackDeleteTask: vi.fn(),
+    trackUpdateTask: vi.fn(),
+  };
+
   const todoSessionServiceMock = {
     getToken: vi.fn(),
   };
@@ -27,6 +37,10 @@ describe('TodoService', () => {
   const notificationServiceMock = {
     success: vi.fn(),
     error: vi.fn(),
+  };
+
+  const translateServiceMock = {
+    instant: vi.fn((key: string) => key),
   };
 
   const todo: ITodo = {
@@ -50,12 +64,18 @@ describe('TodoService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
+    todoSessionServiceMock.getToken.mockReturnValue('token-123');
+
     TestBed.configureTestingModule({
       providers: [
         TodoService,
         {
           provide: TodoApiService,
           useValue: todoApiServiceMock,
+        },
+        {
+          provide: TodoHistoryTrackingService,
+          useValue: todoHistoryTrackingServiceMock,
         },
         {
           provide: TodoSessionService,
@@ -65,11 +85,14 @@ describe('TodoService', () => {
           provide: NotificationService,
           useValue: notificationServiceMock,
         },
+        {
+          provide: TranslateService,
+          useValue: translateServiceMock,
+        },
       ],
     });
 
     service = TestBed.inject(TodoService);
-    todoSessionServiceMock.getToken.mockReturnValue('token-123');
   });
 
   it('should not load todos when token is missing', () => {

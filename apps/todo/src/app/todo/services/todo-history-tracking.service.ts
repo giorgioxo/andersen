@@ -1,4 +1,5 @@
-import { inject, Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY, tap } from 'rxjs';
 
 import { HISTORY_UPDATED_EVENT } from '../core/todo-events.constants';
@@ -10,6 +11,7 @@ import { TodoSessionService } from './todo-session.service';
   providedIn: 'root',
 })
 export class TodoHistoryTrackingService {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly todoSessionService = inject(TodoSessionService);
   private readonly apiService = inject(TodoHistoryTrackingApiService);
 
@@ -67,6 +69,7 @@ export class TodoHistoryTrackingService {
           window.dispatchEvent(new CustomEvent(HISTORY_UPDATED_EVENT));
         }),
         catchError(() => EMPTY),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
   }

@@ -1,3 +1,5 @@
+import type { SortDirection } from '@angular/material/sort';
+
 export enum HistoryEventType {
   CreateTodo = 'CREATE_TODO',
   DeleteTodo = 'DELETE_TODO',
@@ -5,8 +7,6 @@ export enum HistoryEventType {
   DeleteTask = 'DELETE_TASK',
   UpdateTask = 'UPDATE_TASK',
 }
-
-export type HistorySortDirection = 'asc' | 'desc';
 
 export interface IHistoryApiEvent {
   todo_id: string;
@@ -26,5 +26,5 @@ export interface IHistoryQuery {
   limit: number;
   page: number;
   event: HistoryEventType[];
-  sort: HistorySortDirection;
+  sort: Exclude<SortDirection, ''>;
 }
