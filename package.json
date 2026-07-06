@@ -2,7 +2,9 @@
   "name": "@andersen/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start:login": "npx nx serve login"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^21.2.16",

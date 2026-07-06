@@ -15,4 +15,10 @@
     font-size: var(--ui-font-size-xs);
     line-height: 16px;
   }
+
+  &__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
