@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { NotificationService, UiButtonComponent, UiInputComponent } from '@andersen/shared-ui';
+import { NotificationService, UiButtonComponent, UiInputComponent, UiInputType } from '@andersen/shared-ui';
 import { AuthService } from '../auth.service';
 import { PASSWORD_VALIDATORS, passwordsMatchValidator, USERNAME_VALIDATORS } from '../auth.validator';
 
@@ -18,6 +18,8 @@ export class ResetPasswordComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly notificationService = inject(NotificationService);
+
+  protected readonly uiInputType = UiInputType;
 
   protected readonly resetPasswordForm = this.formBuilder.group(
     {

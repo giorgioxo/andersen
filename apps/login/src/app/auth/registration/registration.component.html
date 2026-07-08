@@ -3,12 +3,12 @@
 <form class="registration" [formGroup]="registrationForm" (ngSubmit)="submitRegistration()">
   <h1 class="registration__title">Registration</h1>
 
-  <ui-input label="Login" [control]="controls.username" />
+  <ui-input label="Login" [type]="uiInputType.Text" [control]="controls.username" />
 
-  <ui-input label="Password" type="password" [control]="controls.password" />
+  <ui-input label="Password" [type]="uiInputType.Password" [control]="controls.password" />
 
   <div class="registration__password-check">
-    <ui-input label="Repeat Password" type="password" [control]="controls.repeatPassword" />
+    <ui-input label="Repeat Password" [type]="uiInputType.Password" [control]="controls.repeatPassword" />
 
     @if (registrationForm.hasError('passwordMismatch') && controls.repeatPassword.touched) {
       <p class="registration__error">Passwords do not match</p>

@@ -2,7 +2,27 @@
   <mat-form-field class="ui-input__field" appearance="outline">
     <mat-label>{{ label() }}</mat-label>
 
-    <input matInput [type]="type()" [formControl]="control()" />
+    <input #inputElement matInput [type]="inputType()" [formControl]="control()" />
+
+    @if (isPasswordInput()) {
+      <button
+        class="ui-input__toggle"
+        matIconButton
+        matSuffix
+        type="button"
+        [attr.aria-label]="passwordVisibilityView().ariaLabel"
+        [attr.aria-pressed]="!isPasswordHidden()"
+        (click)="togglePasswordVisibility($event)"
+      >
+        @if (passwordVisibilityView().iconType === uiPasswordVisibilityIconType.Material) {
+          <mat-icon>{{ passwordVisibilityView().icon }}</mat-icon>
+        } @else if (passwordVisibilityView().iconType === uiPasswordVisibilityIconType.Svg) {
+          <img class="ui-input__toggle-svg" [src]="passwordVisibilityView().icon" alt="" aria-hidden="true" />
+        } @else {
+          <span>{{ passwordVisibilityView().icon }}</span>
+        }
+      </button>
+    }
   </mat-form-field>
 
   @if (control().touched && control().hasError('required')) {
