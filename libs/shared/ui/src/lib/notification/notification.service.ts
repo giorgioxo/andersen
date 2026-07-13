@@ -25,6 +25,7 @@ export class NotificationService {
         status,
       },
       duration: 3000,
+      panelClass: [`ui-notification-panel--${status}`],
       horizontalPosition: 'right',
       verticalPosition: 'top',
     });

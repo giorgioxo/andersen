@@ -12,7 +12,7 @@
     [passwordVisibilityConfig]="signInPasswordVisibilityConfig"
   />
 
-  <ui-button type="submit">Sign In</ui-button>
+  <ui-button type="submit" [loading]="isSignInPending()" [disabled]="signInForm.invalid">Sign In</ui-button>
 
   <button type="button" class="sign-in__link" routerLink="/auth/reset-password">Reset Password</button>
 </form>
