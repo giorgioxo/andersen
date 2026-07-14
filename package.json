@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start:login": "npx nx serve login"
+    "start:login": "npx nx serve login",
+    "test:login": "npx nx test login"
   },
   "private": true,
   "dependencies": {

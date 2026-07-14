@@ -59,7 +59,7 @@ export class SignInComponent {
       .subscribe({
         next: ({ email }) => {
           this.authSessionService.setEmail(email);
-          this.router.navigate([AUTH_ROUTES.SignIn]);
+          this.router.navigate([AUTH_ROUTES.Profile]);
         },
       });
   }
