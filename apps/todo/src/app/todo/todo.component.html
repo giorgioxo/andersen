@@ -1,0 +1,19 @@
+<section class="todo">
+  @let controls = listCreationForm.controls;
+
+  <form class="todo__header" [formGroup]="listCreationForm" (ngSubmit)="addTodoList()">
+    <ui-input label="List Title" [type]="uiInputType.Text" [control]="controls.name" />
+
+    <ui-button class="todo__add-list" type="submit" [disabled]="listCreationForm.invalid">Add List</ui-button>
+  </form>
+
+  @if (todoListsArray.controls.length) {
+    <div class="todo__grid">
+      @for (todoList of todoListsArray.controls; track todoList.controls.id.value; let todoListIndex = $index) {
+        <app-todo-list-card [todoListForm]="todoList" (deleteTodoList)="deleteTodoList(todoListIndex)" />
+      }
+    </div>
+  } @else {
+    <p class="todo__empty">No lists found. Create your first Todo List above.</p>
+  }
+</section>

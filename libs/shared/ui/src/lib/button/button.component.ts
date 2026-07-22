@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { UiButtonPriority, UiButtonType } from './button.model';
+import { UiButtonAppearance, UiButtonPriority, UiButtonType } from './button.model';
 import { UiSpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
@@ -15,4 +15,5 @@ export class UiButtonComponent {
   public readonly type = input<UiButtonType>('button');
   public readonly disabled = input(false);
   public readonly loading = input(false);
+  public readonly appearance = input<UiButtonAppearance>('filled');
 }

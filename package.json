@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "start:login": "npx nx serve login",
-    "test:login": "npx nx test login"
+    "test:login": "npx nx test login",
+    "start:todo": "npx nx serve todo"
   },
   "private": true,
   "dependencies": {
