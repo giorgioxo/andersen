@@ -1,23 +1,16 @@
 <section class="todo">
-  @let controls = todoForm.controls;
+  @let controls = listCreationForm.controls;
 
-  <form class="todo__header" [formGroup]="todoForm" (ngSubmit)="addTodo()">
+  <form class="todo__header" [formGroup]="listCreationForm" (ngSubmit)="addTodoList()">
     <ui-input label="List Title" [type]="uiInputType.Text" [control]="controls.name" />
 
-    <ui-button class="todo__add-list" type="submit" [disabled]="todoForm.invalid">Add List</ui-button>
+    <ui-button class="todo__add-list" type="submit" [disabled]="listCreationForm.invalid">Add List</ui-button>
   </form>
 
-  @if (todos().length) {
+  @if (todoListsArray.controls.length) {
     <div class="todo__grid">
-      @for (todo of todos(); track todo.id) {
-        <app-todo-list-card
-          [todo]="todo"
-          (deleteTodo)="deleteTodo($event)"
-          (addTask)="addTask($event)"
-          (deleteTask)="deleteTask($event)"
-          (toggleTaskCompleted)="toggleTaskCompleted($event)"
-          (updateTask)="updateTask($event)"
-        />
+      @for (todoList of todoListsArray.controls; track todoList.controls.id.value; let todoListIndex = $index) {
+        <app-todo-list-card [todoListForm]="todoList" (deleteTodoList)="deleteTodoList(todoListIndex)" />
       }
     </div>
   } @else {

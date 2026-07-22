@@ -1,30 +1,27 @@
-@let controls = taskForm.controls;
+@let todoListControls = todoListForm().controls;
+@let taskCreationControls = taskCreationForm.controls;
 
 <mat-card class="todo-list-card">
   <mat-card-header class="todo-list-card__header">
-    <mat-card-title class="todo-list-card__title">{{ todo().name }}</mat-card-title>
+    <mat-card-title class="todo-list-card__title">{{ todoListControls.name.value }}</mat-card-title>
   </mat-card-header>
 
   <mat-card-content class="todo-list-card__content">
-    <form class="todo-list-card__task-form" [formGroup]="taskForm" (ngSubmit)="onAddTask()">
-      <ui-input label="Task Description" [type]="uiInputType.Text" [control]="controls.name" />
+    <form class="todo-list-card__task-form" [formGroup]="taskCreationForm" (ngSubmit)="addTodoTask()">
+      <ui-input label="Task Description" [type]="uiInputType.Text" [control]="taskCreationControls.name" />
 
-      <ui-button type="submit" [disabled]="taskForm.invalid" appearance="tonal">Add Task</ui-button>
+      <ui-button type="submit" [disabled]="taskCreationForm.invalid" appearance="tonal">Add Task</ui-button>
     </form>
   </mat-card-content>
 
   <mat-card-actions class="todo-list-card__actions">
-    <ui-button priority="secondary" type="button" (click)="onDeleteTodo()">Delete List</ui-button>
+    <ui-button priority="secondary" type="button" (click)="onDeleteTodoList()">Delete List</ui-button>
   </mat-card-actions>
-  @if (todo().tasks.length) {
+
+  @if (todoTasksArray().controls.length) {
     <div class="todo-list-card__tasks">
-      @for (task of todo().tasks; track task.id) {
-        <app-todo-task-item
-          [task]="task"
-          (deleteTask)="onDeleteTask($event)"
-          (completedChange)="onToggleTaskCompleted($event)"
-          (updateTask)="onUpdateTask($event)"
-        />
+      @for (todoTask of todoTasksArray().controls; track todoTask.controls.id.value; let todoTaskIndex = $index) {
+        <app-todo-task-item [todoTaskForm]="todoTask" (deleteTodoTask)="deleteTodoTask(todoTaskIndex)" />
       }
     </div>
   }

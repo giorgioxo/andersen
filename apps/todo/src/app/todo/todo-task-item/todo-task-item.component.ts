@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { UiButtonComponent, UiInputComponent, UiInputType } from '@andersen/shared-ui';
 
-import { ITodoTask, ITodoTaskItemUpdateEvent } from '../core/todo.models';
+import { TodoTaskFormGroup } from '../core/todo.models';
 
 @Component({
   selector: 'app-todo-task-item',
@@ -14,53 +14,48 @@ import { ITodoTask, ITodoTaskItemUpdateEvent } from '../core/todo.models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoTaskItemComponent {
-  private readonly formBuilder = inject(NonNullableFormBuilder);
+  public readonly todoTaskForm = input.required<TodoTaskFormGroup>();
 
-  public readonly task = input.required<ITodoTask>();
-
-  public readonly deleteTask = output<string>();
-  public readonly completedChange = output<string>();
-  public readonly updateTask = output<ITodoTaskItemUpdateEvent>();
+  public readonly deleteTodoTask = output<void>();
 
   protected readonly isEditing = signal(false);
+  protected readonly previousTaskName = signal<string | null>(null);
   protected readonly uiInputType = UiInputType;
 
-  protected readonly editForm = this.formBuilder.group({
-    name: ['', Validators.required],
-  });
+  protected readonly controls = computed(() => this.todoTaskForm().controls);
 
-  protected onDeleteTask(): void {
-    this.deleteTask.emit(this.task().id);
-  }
-
-  protected onCompletedChange(): void {
-    this.completedChange.emit(this.task().id);
+  protected onDeleteTodoTask(): void {
+    this.deleteTodoTask.emit();
   }
 
   protected startEdit(): void {
-    this.editForm.controls.name.setValue(this.task().name);
+    this.previousTaskName.set(this.controls().name.value);
     this.isEditing.set(true);
   }
 
   protected saveEdit(): void {
-    if (this.editForm.invalid) {
-      this.editForm.markAllAsTouched();
+    const normalizedName = this.controls().name.value.trim();
+
+    if (!normalizedName) {
+      this.controls().name.setErrors({ required: true });
+      this.todoTaskForm().markAllAsTouched();
       return;
     }
 
-    const { name } = this.editForm.getRawValue();
-
-    this.updateTask.emit({
-      taskId: this.task().id,
-      name,
-    });
-
+    this.controls().name.setValue(normalizedName);
+    this.previousTaskName.set(null);
     this.isEditing.set(false);
   }
 
   protected cancelEdit(): void {
-    this.editForm.reset();
-    this.editForm.controls.name.setErrors(null);
+    const previousTaskName = this.previousTaskName();
+
+    if (previousTaskName !== null) {
+      this.controls().name.setValue(previousTaskName);
+    }
+
+    this.controls().name.setErrors(null);
+    this.previousTaskName.set(null);
     this.isEditing.set(false);
   }
 }

@@ -1,34 +1,29 @@
-export interface ITodoCollectionItem {
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
+
+export interface ITodoTaskPayload {
   id: string;
-}
-
-export interface ITodoNamedCollectionItem extends ITodoCollectionItem {
   name: string;
-}
-
-export interface ITodoTask extends ITodoNamedCollectionItem {
   completed: boolean;
 }
 
-export interface ITodo extends ITodoNamedCollectionItem {
-  tasks: ITodoTask[];
-}
-
-export interface ITodoTaskNameEvent {
-  todoId: string;
+export interface ITodoListPayload {
+  id: string;
   name: string;
+  tasks: ITodoTaskPayload[];
 }
 
-export interface ITodoTaskTargetEvent {
-  todoId: string;
-  taskId: string;
-}
+export type TodoTaskFormGroup = FormGroup<{
+  id: FormControl<string>;
+  name: FormControl<string>;
+  completed: FormControl<boolean>;
+}>;
 
-export interface ITodoTaskFullEvent extends ITodoTaskTargetEvent {
-  name: string;
-}
+export type TodoListFormGroup = FormGroup<{
+  id: FormControl<string>;
+  name: FormControl<string>;
+  tasks: FormArray<TodoTaskFormGroup>;
+}>;
 
-export interface ITodoTaskItemUpdateEvent {
-  taskId: string;
-  name: string;
-}
+export type TodoListsFormGroup = FormGroup<{
+  todoLists: FormArray<TodoListFormGroup>;
+}>;

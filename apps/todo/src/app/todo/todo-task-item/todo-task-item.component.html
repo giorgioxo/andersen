@@ -1,26 +1,26 @@
-@let controls = editForm.controls;
+@let controls = todoTaskForm().controls;
 
 <div class="todo-task-item">
-  <mat-checkbox class="todo-task-item__checkbox" [checked]="task().completed" (change)="onCompletedChange()" />
+  <mat-checkbox class="todo-task-item__checkbox" [formControl]="controls.completed" />
 
   <div class="todo-task-item__body">
     @if (isEditing()) {
-      <form class="todo-task-item__edit-form" [formGroup]="editForm" (ngSubmit)="saveEdit()">
+      <form class="todo-task-item__edit-form" [formGroup]="todoTaskForm()" (ngSubmit)="saveEdit()">
         <ui-input label="Task Description" [type]="uiInputType.Text" [control]="controls.name" />
 
         <div class="todo-task-item__actions todo-task-item__actions-save">
-          <ui-button type="submit" appearance="filled" [disabled]="editForm.invalid">Save</ui-button>
+          <ui-button type="submit" appearance="filled" [disabled]="todoTaskForm().invalid">Save</ui-button>
           <ui-button type="button" appearance="outlined" (click)="cancelEdit()">Cancel</ui-button>
         </div>
       </form>
     } @else {
-      <span class="todo-task-item__name" [class.todo-task-item__name--completed]="task().completed">
-        {{ task().name }}
+      <span class="todo-task-item__name" [class.todo-task-item__name--completed]="controls.completed.value">
+        {{ controls.name.value }}
       </span>
 
       <div class="todo-task-item__actions">
         <ui-button type="button" appearance="tonal" (click)="startEdit()">Edit</ui-button>
-        <ui-button type="button" appearance="text" (click)="onDeleteTask()">Delete</ui-button>
+        <ui-button type="button" appearance="text" (click)="onDeleteTodoTask()">Delete</ui-button>
       </div>
     }
   </div>

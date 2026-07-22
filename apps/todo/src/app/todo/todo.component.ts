@@ -5,8 +5,7 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { UiButtonComponent, UiDialogService, UiInputComponent, UiInputType } from '@andersen/shared-ui';
 
 import { DELETE_TODO_DIALOG_DATA } from './core/todo.constants';
-import { ITodoTaskFullEvent, ITodoTaskNameEvent, ITodoTaskTargetEvent } from './core/todo.models';
-import { TodoService } from './services/todo.service';
+import { TodoFormService } from './services/todo-form.service';
 import { TodoListCardComponent } from './todo-list-card/todo-list-card.component';
 
 @Component({
@@ -18,31 +17,37 @@ import { TodoListCardComponent } from './todo-list-card/todo-list-card.component
 })
 export class TodoComponent {
   private readonly formBuilder = inject(NonNullableFormBuilder);
-  private readonly todoService = inject(TodoService);
+  private readonly todoFormService = inject(TodoFormService);
   private readonly dialogService = inject(UiDialogService);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly todos = this.todoService.todos;
   protected readonly uiInputType = UiInputType;
 
-  protected readonly todoForm = this.formBuilder.group({
+  protected readonly todoListsForm = this.todoFormService.createTodoListsForm();
+  protected readonly todoListsArray = this.todoListsForm.controls.todoLists;
+
+  protected readonly listCreationForm = this.formBuilder.group({
     name: ['', Validators.required],
   });
 
-  protected addTodo(): void {
-    if (this.todoForm.invalid) {
-      this.todoForm.markAllAsTouched();
+  protected addTodoList(): void {
+    if (this.listCreationForm.invalid) {
+      this.listCreationForm.markAllAsTouched();
       return;
     }
 
-    const { name } = this.todoForm.getRawValue();
+    const { name } = this.listCreationForm.getRawValue();
+    const todoListGroup = this.todoFormService.createTodoListGroup(name);
 
-    this.todoService.addTodo(name);
-    this.todoForm.reset();
-    this.todoForm.controls.name.setErrors(null);
+    if (!todoListGroup) {
+      return;
+    }
+
+    this.todoListsArray.push(todoListGroup);
+    this.resetListCreationForm();
   }
 
-  protected deleteTodo(todoId: string): void {
+  protected deleteTodoList(todoListIndex: number): void {
     this.dialogService
       .open(DELETE_TODO_DIALOG_DATA)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -51,25 +56,12 @@ export class TodoComponent {
           return;
         }
 
-        this.todoService.deleteTodo(todoId);
-        this.todoForm.reset();
-        this.todoForm.controls.name.setErrors(null);
+        this.todoListsArray.removeAt(todoListIndex);
       });
   }
 
-  protected addTask(event: ITodoTaskNameEvent): void {
-    this.todoService.addTask(event);
-  }
-
-  protected deleteTask(event: ITodoTaskTargetEvent): void {
-    this.todoService.deleteTask(event);
-  }
-
-  protected toggleTaskCompleted(event: ITodoTaskTargetEvent): void {
-    this.todoService.toggleTaskCompleted(event);
-  }
-
-  protected updateTask(event: ITodoTaskFullEvent): void {
-    this.todoService.updateTaskName(event);
+  private resetListCreationForm(): void {
+    this.listCreationForm.reset();
+    this.listCreationForm.controls.name.setErrors(null);
   }
 }

@@ -1,16 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 
 import { UiButtonComponent, UiInputComponent, UiInputType } from '@andersen/shared-ui';
 
-import {
-  ITodo,
-  ITodoTaskFullEvent,
-  ITodoTaskItemUpdateEvent,
-  ITodoTaskNameEvent,
-  ITodoTaskTargetEvent,
-} from '../core/todo.models';
+import { TodoListFormGroup } from '../core/todo.models';
+import { TodoFormService } from '../services/todo-form.service';
 import { TodoTaskItemComponent } from '../todo-task-item/todo-task-item.component';
 
 @Component({
@@ -22,61 +17,46 @@ import { TodoTaskItemComponent } from '../todo-task-item/todo-task-item.componen
 })
 export class TodoListCardComponent {
   private readonly formBuilder = inject(NonNullableFormBuilder);
+  private readonly todoFormService = inject(TodoFormService);
 
-  public readonly todo = input.required<ITodo>();
+  public readonly todoListForm = input.required<TodoListFormGroup>();
 
-  public readonly deleteTodo = output<string>();
-  public readonly addTask = output<ITodoTaskNameEvent>();
-  public readonly deleteTask = output<ITodoTaskTargetEvent>();
-  public readonly toggleTaskCompleted = output<ITodoTaskTargetEvent>();
-  public readonly updateTask = output<ITodoTaskFullEvent>();
+  public readonly deleteTodoList = output<void>();
 
   protected readonly uiInputType = UiInputType;
+  protected readonly todoTasksArray = computed(() => this.todoListForm().controls.tasks);
 
-  protected readonly taskForm = this.formBuilder.group({
+  protected readonly taskCreationForm = this.formBuilder.group({
     name: ['', Validators.required],
   });
 
-  protected onDeleteTodo(): void {
-    this.deleteTodo.emit(this.todo().id);
+  protected onDeleteTodoList(): void {
+    this.deleteTodoList.emit();
   }
 
-  protected onAddTask(): void {
-    if (this.taskForm.invalid) {
-      this.taskForm.markAllAsTouched();
+  protected addTodoTask(): void {
+    if (this.taskCreationForm.invalid) {
+      this.taskCreationForm.markAllAsTouched();
       return;
     }
 
-    const { name } = this.taskForm.getRawValue();
+    const { name } = this.taskCreationForm.getRawValue();
+    const todoTaskGroup = this.todoFormService.createTodoTaskGroup(name);
 
-    this.addTask.emit({
-      todoId: this.todo().id,
-      name,
-    });
+    if (!todoTaskGroup) {
+      return;
+    }
 
-    this.taskForm.reset();
-    this.taskForm.controls.name.setErrors(null);
+    this.todoTasksArray().push(todoTaskGroup);
+    this.resetTaskCreationForm();
   }
 
-  protected onDeleteTask(taskId: string): void {
-    this.deleteTask.emit({
-      todoId: this.todo().id,
-      taskId,
-    });
+  protected deleteTodoTask(todoTaskIndex: number): void {
+    this.todoTasksArray().removeAt(todoTaskIndex);
   }
 
-  protected onToggleTaskCompleted(taskId: string): void {
-    this.toggleTaskCompleted.emit({
-      todoId: this.todo().id,
-      taskId,
-    });
-  }
-
-  protected onUpdateTask(event: ITodoTaskItemUpdateEvent): void {
-    this.updateTask.emit({
-      todoId: this.todo().id,
-      taskId: event.taskId,
-      name: event.name,
-    });
+  private resetTaskCreationForm(): void {
+    this.taskCreationForm.reset();
+    this.taskCreationForm.controls.name.setErrors(null);
   }
 }
