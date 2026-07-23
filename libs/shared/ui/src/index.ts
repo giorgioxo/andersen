@@ -5,3 +5,6 @@ export * from './lib/notification/notification.service';
 export * from './lib/input/input.component';
 export * from './lib/input/input.model';
 export * from './lib/input/password-visibility.config';
+export * from './lib/dialog/dialog.component';
+export * from './lib/dialog/dialog.model';
+export * from './lib/dialog/dialog.service';
