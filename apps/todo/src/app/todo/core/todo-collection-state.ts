@@ -9,11 +9,7 @@ export abstract class TodoCollectionState {
     return items.filter(({ id }) => id !== itemId);
   }
 
-  protected updateItem<TItem extends ITodoCollectionItem>(
-    items: TItem[],
-    itemId: string,
-    updater: (item: TItem) => TItem,
-  ): TItem[] {
+  protected updateItem<TItem extends ITodoCollectionItem>(items: TItem[], itemId: string, updater: (item: TItem) => TItem): TItem[] {
     return items.map((item) => (item.id === itemId ? updater(item) : item));
   }
 
